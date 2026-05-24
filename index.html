@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>まなびやつばめ English Lesson Station</title>
+
+<style>
+body{
+  margin:0;
+  font-family:"Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;
+  background:linear-gradient(135deg,#dff4ff,#fff6cf);
+  text-align:center;
+  color:#333;
+}
+.app{
+  max-width:760px;
+  margin:auto;
+  padding:18px;
+}
+h1{
+  color:#1976d2;
+  line-height:1.4;
+}
+.card{
+  background:#fff;
+  border-radius:28px;
+  padding:22px;
+  box-shadow:0 8px 18px rgba(0,0,0,0.15);
+  margin-top:16px;
+}
+.hidden{display:none;}
+.mascot{
+  font-size:54px;
+  animation:bounce 1.2s infinite;
+}
+.menu button,.choice,.main-btn{
+  width:100%;
+  padding:15px;
+  margin:10px 0;
+  border:none;
+  border-radius:18px;
+  font-size:21px;
+  font-weight:bold;
+  cursor:pointer;
+}
+.menu button,.main-btn{
+  background:#4aa3ff;
+  color:#fff;
+  box-shadow:0 5px 0 #226fc0;
+}
+.choice{
+  background:#fff;
+  border:3px solid #4aa3ff;
+}
+.choice.correct{
+  background:#d8ffd8;
+  border-color:#32b332;
+  animation:pop .4s;
+}
+.choice.wrong{
+  background:#ffe1e1;
+  border-color:#e74c3c;
+  animation:shake .35s;
+}
+.question-type{
+  display:inline-block;
+  background:#fff0a8;
+  padding:8px 16px;
+  border-radius:999px;
+  font-weight:bold;
+}
+.question{
+  font-size:34px;
+  font-weight:bold;
+  margin:20px 0;
+  line-height:1.5;
+}
+.sub-question{
+  font-size:20px;
+  color:#555;
+}
+.result-box{
+  margin-top:16px;
+  padding:16px;
+  border-radius:20px;
+  background:#f5fbff;
+  border:3px dashed #8cc8ff;
+  display:none;
+}
+.result-box.show{
+  display:block;
+  animation:pop .35s;
+}
+.result{
+  font-size:28px;
+  font-weight:bold;
+}
+.score{
+  margin-top:14px;
+  font-size:18px;
+}
+.next-btn{
+  background:#ff9f43;
+  box-shadow:0 5px 0 #c46c12;
+}
+.back-btn{
+  background:#888;
+  box-shadow:0 5px 0 #555;
+}
+.finish-title{
+  font-size:32px;
+  font-weight:bold;
+  color:#1976d2;
+}
+.wrong-list{
+  text-align:left;
+  margin-top:18px;
+  background:#fff8e1;
+  border-radius:18px;
+  padding:16px;
+}
+.wrong-list li{
+  margin:8px 0;
+  font-size:18px;
+}
+.practice-message{
+  font-size:20px;
+  font-weight:bold;
+  color:#d35400;
+  line-height:1.6;
+}
+.confetti{
+  position:fixed;
+  width:12px;
+  height:12px;
+  top:-20px;
+  z-index:9999;
+  animation:fall 1.5s linear forwards;
+}
+@keyframes pop{
+  0%{transform:scale(.75);}
+  100%{transform:scale(1);}
+}
+@keyframes shake{
+  0%{transform:translateX(0);}
+  25%{transform:translateX(-8px);}
+  50%{transform:translateX(8px);}
+  75%{transform:translateX(-5px);}
+  100%{transform:translateX(0);}
+}
+@keyframes bounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-8px);}
+}
+@keyframes fall{
+  100%{
+    transform:translateY(110vh) rotate(720deg);
+    opacity:0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<h1>まなびやつばめ<br>English Lesson Station</h1>
+<p>英単語を楽しくれんしゅうしよう！</p>
+
+<div id="loading" class="card">
+  <div class="mascot">🕊️</div>
+  <p>英単語データを読み込み中...</p>
+</div>
+
+<div id="startScreen" class="card hidden">
+  <div class="mascot">🕊️</div>
+  <div class="menu">
+    <button onclick="startQuiz('jp')">単語の和訳クイズ</button>
+    <button onclick="startQuiz('en')">単語の英訳クイズ</button>
+    <button onclick="startQuiz('blank1')">穴埋めクイズ レベル1</button>
+    <button onclick="startQuiz('blank2')">穴埋めクイズ レベル2</button>
+    <button onclick="startQuiz('blank3')">穴埋めクイズ レベル3</button>
+  </div>
+</div>
+
+<div id="quizScreen" class="card hidden">
+  <div id="questionType" class="question-type"></div>
+  <div id="countText" class="score"></div>
+  <div id="questionText" class="question"></div>
+  <div id="subQuestion" class="sub-question"></div>
+  <div id="choices"></div>
+
+  <div id="resultBox" class="result-box">
+    <div id="resultMascot" class="mascot">🎉</div>
+    <div id="result" class="result"></div>
+    <div id="answerText"></div>
+  </div>
+
+  <div id="score" class="score"></div>
+
+  <button id="nextButton" class="main-btn next-btn hidden" onclick="nextQuestion()">次の問題へ</button>
+  <button class="main-btn back-btn" onclick="backToStart()">スタート画面へ</button>
+</div>
+
+<div id="finishScreen" class="card hidden">
+  <div class="mascot">🏆</div>
+  <div class="finish-title">20問終了！</div>
+  <div id="finalScore" class="result"></div>
+  <div id="wrongArea"></div>
+  <button class="main-btn back-btn" onclick="backToStart()">スタート画面へ</button>
+</div>
+
+</div>
+
+<script>
+let wordData = [];
+let quizWords = [];
+let currentIndex = 0;
+let score = 0;
+let currentMode = "";
+let wrongWords = [];
+let currentQuestion = null;
+let audioContext = null;
+
+async function loadCSV(){
+  try{
+    const res = await fetch("english_700_words_list.csv");
+    const text = await res.text();
+    wordData = parseCSV(text)
+      .filter(w => w.english && w.japanese);
+
+    document.getElementById("loading").classList.add("hidden");
+    document.getElementById("startScreen").classList.remove("hidden");
+  }catch(e){
+    document.getElementById("loading").innerHTML =
+      "CSVが読み込めませんでした。<br>english_700_words_list.csv を index.html と同じ場所に置いてください。";
+  }
+}
+
+function parseCSV(text){
+  text = text.replace(/^\uFEFF/, "");
+  const lines = text.trim().split(/\r?\n/);
+  const header = lines[0].split(",");
+  const englishIndex = header.indexOf("English");
+  const japaneseIndex = header.indexOf("日本語");
+  const noIndex = header.indexOf("No");
+
+  const data = [];
+
+  for(let i=1;i<lines.length;i++){
+    const cols = splitCSVLine(lines[i]);
+    data.push({
+      no: cols[noIndex] || i,
+      english: cols[englishIndex],
+      japanese: cols[japaneseIndex]
+    });
+  }
+  return data;
+}
+
+function splitCSVLine(line){
+  const result = [];
+  let current = "";
+  let inQuotes = false;
+
+  for(let i=0;i<line.length;i++){
+    const char = line[i];
+
+    if(char === '"' && line[i+1] === '"'){
+      current += '"';
+      i++;
+    }else if(char === '"'){
+      inQuotes = !inQuotes;
+    }else if(char === "," && !inQuotes){
+      result.push(current);
+      current = "";
+    }else{
+      current += char;
+    }
+  }
+  result.push(current);
+  return result;
+}
+
+function startQuiz(mode){
+  initAudio();
+  playStartSound();
+
+  currentMode = mode;
+  currentIndex = 0;
+  score = 0;
+  wrongWords = [];
+
+  const usableWords = getUsableWords(mode);
+  quizWords = shuffle([...usableWords]).slice(0,20);
+
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("finishScreen").classList.add("hidden");
+  document.getElementById("quizScreen").classList.remove("hidden");
+
+  showQuestion();
+}
+
+function getUsableWords(mode){
+  if(mode.startsWith("blank")){
+    return wordData.filter(w => w.english.replace(/[^a-zA-Z]/g,"").length >= 3);
+  }
+  return wordData;
+}
+
+function showQuestion(){
+  document.getElementById("resultBox").classList.remove("show");
+  document.getElementById("nextButton").classList.add("hidden");
+  document.getElementById("choices").innerHTML = "";
+
+  currentQuestion = quizWords[currentIndex];
+
+  document.getElementById("countText").textContent =
+    `${currentIndex + 1}問目 / 20問`;
+
+  if(currentMode === "jp"){
+    document.getElementById("questionType").textContent = "単語の和訳クイズ";
+    document.getElementById("questionText").textContent = currentQuestion.english;
+    document.getElementById("subQuestion").textContent = "日本語の意味を選びましょう";
+    makeChoices(currentQuestion.japanese, "japanese");
+  }
+
+  if(currentMode === "en"){
+    document.getElementById("questionType").textContent = "単語の英訳クイズ";
+    document.getElementById("questionText").textContent = currentQuestion.japanese;
+    document.getElementById("subQuestion").textContent = "英語を選びましょう";
+    makeChoices(currentQuestion.english, "english");
+  }
+
+  if(currentMode.startsWith("blank")){
+    document.getElementById("questionType").textContent =
+      currentMode === "blank1" ? "穴埋めクイズ レベル1" :
+      currentMode === "blank2" ? "穴埋めクイズ レベル2" :
+      "穴埋めクイズ レベル3";
+
+    document.getElementById("questionText").textContent =
+      makeBlankWord(currentQuestion.english, currentMode);
+
+    document.getElementById("subQuestion").textContent =
+      `意味：${currentQuestion.japanese}`;
+
+    makeChoices(currentQuestion.english, "english");
+  }
+
+  updateScore();
+}
+
+function makeChoices(answer, field){
+  const choices = [answer];
+
+  while(choices.length < 4){
+    const random = wordData[Math.floor(Math.random() * wordData.length)][field];
+
+    if(random && random !== answer && !choices.includes(random)){
+      choices.push(random);
+    }
+  }
+
+  shuffle(choices).forEach(choice => {
+    const btn = document.createElement("button");
+    btn.className = "choice";
+    btn.textContent = choice;
+    btn.onclick = () => checkAnswer(btn, choice, answer);
+    document.getElementById("choices").appendChild(btn);
+  });
+}
+
+function makeBlankWord(word, mode){
+  const chars = word.split("");
+  const letterIndexes = [];
+
+  chars.forEach((c,i)=>{
+    if(/[a-zA-Z]/.test(c)){
+      letterIndexes.push(i);
+    }
+  });
+
+  if(letterIndexes.length <= 2){
+    return word;
+  }
+
+  let hideIndexes = [];
+
+  if(mode === "blank1"){
+    const inner = letterIndexes.slice(1,-1);
+    hideIndexes = [inner[Math.floor(Math.random()*inner.length)]];
+  }
+
+  if(mode === "blank2"){
+    const inner = letterIndexes.slice(1,-1);
+    const count = Math.min(inner.length, Math.random() < 0.5 ? 2 : 3);
+    hideIndexes = shuffle([...inner]).slice(0,count);
+  }
+
+  if(mode === "blank3"){
+    hideIndexes = letterIndexes.slice(1,-1);
+  }
+
+  hideIndexes.forEach(i => chars[i] = "_");
+
+  return chars.join(" ");
+}
+
+function checkAnswer(button, selected, answer){
+  const buttons = document.querySelectorAll(".choice");
+  buttons.forEach(btn => btn.disabled = true);
+
+  const resultBox = document.getElementById("resultBox");
+  const resultMascot = document.getElementById("resultMascot");
+  const result = document.getElementById("result");
+  const answerText = document.getElementById("answerText");
+
+  resultBox.classList.add("show");
+
+  if(selected === answer){
+    score++;
+    button.classList.add("correct");
+    resultMascot.textContent = "🎉";
+    result.textContent = randomGoodMessage();
+    result.style.color = "#2eaf37";
+    answerText.textContent = "";
+    playCorrectSound();
+    createConfetti();
+  }else{
+    button.classList.add("wrong");
+    resultMascot.textContent = "🕊️";
+    result.textContent = "おしい！";
+    result.style.color = "#e74c3c";
+    answerText.innerHTML =
+      `正解：<strong>${currentQuestion.english}</strong> ／ ${currentQuestion.japanese}`;
+
+    wrongWords.push(currentQuestion);
+    playWrongSound();
+
+    buttons.forEach(btn => {
+      if(btn.textContent === answer){
+        btn.classList.add("correct");
+      }
+    });
+  }
+
+  document.getElementById("nextButton").classList.remove("hidden");
+  updateScore();
+}
+
+function nextQuestion(){
+  currentIndex++;
+
+  if(currentIndex >= 20){
+    finishQuiz();
+  }else{
+    showQuestion();
+  }
+}
+
+function finishQuiz(){
+  document.getElementById("quizScreen").classList.add("hidden");
+  document.getElementById("finishScreen").classList.remove("hidden");
+
+  document.getElementById("finalScore").textContent =
+    `20問中 ${score}問 正解！`;
+
+  const wrongArea = document.getElementById("wrongArea");
+
+  if(wrongWords.length === 0){
+    wrongArea.innerHTML =
+      `<p class="practice-message">全問正解！すばらしいです！</p>`;
+    createConfetti();
+    return;
+  }
+
+  let html = `
+    <p class="practice-message">
+      間違った単語は英語と日本語を３回ずつ書いて練習しましょう！
+    </p>
+    <div class="wrong-list">
+      <strong>間違った単語一覧</strong>
+      <ol>
+  `;
+
+  wrongWords.forEach(w => {
+    html += `<li>${w.english} ／ ${w.japanese}</li>`;
+  });
+
+  html += `</ol></div>`;
+  wrongArea.innerHTML = html;
+}
+
+function updateScore(){
+  document.getElementById("score").textContent =
+    `スコア：${score} / ${currentIndex}`;
+}
+
+function backToStart(){
+  document.getElementById("quizScreen").classList.add("hidden");
+  document.getElementById("finishScreen").classList.add("hidden");
+  document.getElementById("startScreen").classList.remove("hidden");
+}
+
+function shuffle(array){
+  return array.sort(() => Math.random() - 0.5);
+}
+
+function randomGoodMessage(){
+  const messages = ["Great!","Excellent!","Perfect!","Good job!","やったね！","すばらしい！"];
+  return messages[Math.floor(Math.random()*messages.length)];
+}
+
+function initAudio(){
+  if(!audioContext){
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if(audioContext.state === "suspended"){
+    audioContext.resume();
+  }
+}
+
+function playCorrectSound(){
+  if(!audioContext) return;
+  const osc = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+
+  osc.type = "triangle";
+  osc.frequency.setValueAtTime(523,audioContext.currentTime);
+  osc.frequency.setValueAtTime(659,audioContext.currentTime + .1);
+  osc.frequency.setValueAtTime(784,audioContext.currentTime + .2);
+
+  gain.gain.setValueAtTime(.2,audioContext.currentTime);
+  gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime + .5);
+
+  osc.connect(gain);
+  gain.connect(audioContext.destination);
+  osc.start();
+  osc.stop(audioContext.currentTime + .5);
+}
+
+function playWrongSound(){
+  if(!audioContext) return;
+  const osc = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(420,audioContext.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(320,audioContext.currentTime + .25);
+
+  gain.gain.setValueAtTime(.08,audioContext.currentTime);
+  gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime + .35);
+
+  osc.connect(gain);
+  gain.connect(audioContext.destination);
+  osc.start();
+  osc.stop(audioContext.currentTime + .35);
+}
+
+function playStartSound(){
+  if(!audioContext) return;
+  const osc = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+
+  osc.type = "square";
+  osc.frequency.setValueAtTime(392,audioContext.currentTime);
+  osc.frequency.setValueAtTime(523,audioContext.currentTime + .08);
+  osc.frequency.setValueAtTime(659,audioContext.currentTime + .16);
+
+  gain.gain.setValueAtTime(.12,audioContext.currentTime);
+  gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime + .35);
+
+  osc.connect(gain);
+  gain.connect(audioContext.destination);
+  osc.start();
+  osc.stop(audioContext.currentTime + .35);
+}
+
+function createConfetti(){
+  const colors = ["#ff6b6b","#4aa3ff","#ffd93d","#6bff95","#c77dff"];
+
+  for(let i=0;i<30;i++){
+    const confetti = document.createElement("div");
+    confetti.className = "confetti";
+    confetti.style.left = Math.random()*100 + "vw";
+    confetti.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+    document.body.appendChild(confetti);
+
+    setTimeout(()=>confetti.remove(),1500);
+  }
+}
+
+loadCSV();
+</script>
+
+</body>
+</html>
