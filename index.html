@@ -6,7 +6,6 @@
 <title>まなびやつばめ English Lesson</title>
 
 <style>
-
 body{
   margin:0;
   font-family:"Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;
@@ -58,7 +57,6 @@ h1{
 .choice,
 .main-btn,
 .speak-btn{
-
   width:100%;
   padding:15px;
   margin:10px 0;
@@ -215,7 +213,6 @@ h1{
     opacity:0;
   }
 }
-
 </style>
 </head>
 
@@ -224,10 +221,7 @@ h1{
 <div class="app">
 
 <a href="https://manabiya-tsubame.com/" target="_blank">
-  <img
-    src="rogo.png"
-    alt="まなびやつばめ"
-    class="top-logo">
+  <img src="rogo.png" alt="まなびやつばめ" class="top-logo">
 </a>
 
 <h1>
@@ -243,78 +237,56 @@ English Lesson
 </div>
 
 <div id="startScreen" class="card hidden">
-
   <div class="mascot">🕊️</div>
 
   <div class="menu">
-    <button onclick="startQuiz('jp')">単語の和訳クイズ</button>
-    <button onclick="startQuiz('en')">単語の英訳クイズ</button>
-    <button onclick="startQuiz('blank1')">穴埋めクイズ レベル1</button>
-    <button onclick="startQuiz('blank2')">穴埋めクイズ レベル2</button>
-    <button onclick="startQuiz('blank3')">穴埋めクイズ レベル3</button>
+    <button onclick="startQuiz('jp')">単語の和英クイズ</button>
+    <button onclick="startQuiz('en')">英語の英訳クイズ</button>
+    <button onclick="startQuiz('blank1')">あなうめクイズ　レベル1</button>
+    <button onclick="startQuiz('blank2')">あなうめクイズ　レベル2</button>
+    <button onclick="startQuiz('blank3')">あなうめクイズ　レベル3</button>
   </div>
-
 </div>
 
 <div id="quizScreen" class="card hidden">
-
   <div id="questionType" class="question-type"></div>
-
   <div id="countText" class="score"></div>
-
   <div id="questionText" class="question"></div>
 
-  <button class="speak-btn"
-    onclick="speakWord(currentQuestion.english)">
+  <button class="speak-btn" onclick="speakCurrentWord()">
     🔊 発音を聞く
   </button>
 
   <div id="subQuestion" class="sub-question"></div>
-
   <div id="choices"></div>
 
   <div id="resultBox" class="result-box">
-
     <div id="resultMascot" class="mascot">🎉</div>
-
     <div id="result" class="result"></div>
-
     <div id="answerText" class="answer-show"></div>
-
   </div>
 
   <div id="score" class="score"></div>
 
-  <button class="main-btn back-btn"
-    onclick="backToStart()">
+  <button class="main-btn back-btn" onclick="backToStart()">
     スタート画面へ
   </button>
-
 </div>
 
 <div id="finishScreen" class="card hidden">
-
   <div class="mascot">🏆</div>
-
-  <div class="finish-title">
-    20問終了！
-  </div>
-
+  <div class="finish-title">20問終了！</div>
   <div id="finalScore" class="result"></div>
-
   <div id="wrongArea"></div>
 
-  <button class="main-btn back-btn"
-    onclick="backToStart()">
+  <button class="main-btn back-btn" onclick="backToStart()">
     スタート画面へ
   </button>
-
 </div>
 
 </div>
 
 <script>
-
 let wordData = [];
 let quizWords = [];
 let currentIndex = 0;
@@ -327,61 +299,38 @@ let audioContext = null;
 let isAnswered = false;
 
 async function loadCSV(){
-
   try{
+    const res = await fetch("english_700_words_list.csv");
+    const text = await res.text();
 
-    const res =
-      await fetch("english_700_words_list.csv");
+    wordData = parseCSV(text).filter(w =>
+      w.english &&
+      w.japanese &&
+      /^[a-zA-Z .'-]+$/.test(w.english)
+    );
 
-    const text =
-      await res.text();
-
-    wordData =
-      parseCSV(text).filter(w =>
-        w.english &&
-        w.japanese &&
-        /^[a-zA-Z .'-]+$/.test(w.english)
-      );
-
-    document.getElementById("loading")
-      .classList.add("hidden");
-
-    document.getElementById("startScreen")
-      .classList.remove("hidden");
+    document.getElementById("loading").classList.add("hidden");
+    document.getElementById("startScreen").classList.remove("hidden");
 
   }catch(e){
-
-    document.getElementById("loading")
-      .innerHTML =
-      "CSVが読み込めませんでした";
+    document.getElementById("loading").innerHTML =
+      "CSVが読み込めませんでした。<br>english_700_words_list.csv を index.html と同じ場所に置いてください。";
   }
 }
 
 function parseCSV(text){
-
   text = text.replace(/^\uFEFF/, "");
+  const lines = text.trim().split(/\r?\n/);
+  const header = splitCSVLine(lines[0]);
 
-  const lines =
-    text.trim().split(/\r?\n/);
-
-  const header =
-    splitCSVLine(lines[0]);
-
-  const englishIndex =
-    header.indexOf("English");
-
-  const japaneseIndex =
-    header.indexOf("日本語");
-
-  const noIndex =
-    header.indexOf("No");
+  const englishIndex = header.indexOf("English");
+  const japaneseIndex = header.indexOf("日本語");
+  const noIndex = header.indexOf("No");
 
   const data = [];
 
   for(let i=1;i<lines.length;i++){
-
-    const cols =
-      splitCSVLine(lines[i]);
+    const cols = splitCSVLine(lines[i]);
 
     data.push({
       no: cols[noIndex] || i,
@@ -394,13 +343,11 @@ function parseCSV(text){
 }
 
 function splitCSVLine(line){
-
   const result = [];
   let current = "";
   let inQuotes = false;
 
   for(let i=0;i<line.length;i++){
-
     const char = line[i];
 
     if(char === '"' && line[i+1] === '"'){
@@ -417,51 +364,32 @@ function splitCSVLine(line){
   }
 
   result.push(current);
-
   return result;
 }
 
 function startQuiz(mode){
-
   initAudio();
-
   playStartSound();
 
   currentMode = mode;
-
   currentIndex = 0;
-
   score = 0;
-
   wrongWords = [];
 
-  const usableWords =
-    getUsableWords(mode);
+  const usableWords = getUsableWords(mode);
+  quizWords = shuffle([...usableWords]).slice(0,20);
 
-  quizWords =
-    shuffle([...usableWords]).slice(0,20);
-
-  document.getElementById("startScreen")
-    .classList.add("hidden");
-
-  document.getElementById("finishScreen")
-    .classList.add("hidden");
-
-  document.getElementById("quizScreen")
-    .classList.remove("hidden");
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("finishScreen").classList.add("hidden");
+  document.getElementById("quizScreen").classList.remove("hidden");
 
   showQuestion();
 }
 
 function getUsableWords(mode){
-
   if(mode.startsWith("blank")){
-
     return wordData.filter(w => {
-
-      const clean =
-        w.english.replace(/[^a-zA-Z]/g,"");
-
+      const clean = w.english.replace(/[^a-zA-Z]/g,"");
       return clean.length >= 4;
     });
   }
@@ -470,85 +398,51 @@ function getUsableWords(mode){
 }
 
 function showQuestion(){
-
   isAnswered = false;
 
-  document.getElementById("resultBox")
-    .classList.remove("show");
+  document.getElementById("resultBox").classList.remove("show");
+  document.getElementById("choices").innerHTML = "";
+  document.getElementById("answerText").innerHTML = "";
 
-  document.getElementById("choices")
-    .innerHTML = "";
+  currentQuestion = quizWords[currentIndex];
 
-  document.getElementById("answerText")
-    .innerHTML = "";
-
-  currentQuestion =
-    quizWords[currentIndex];
-
-  document.getElementById("countText")
-    .textContent =
+  document.getElementById("countText").textContent =
     `${currentIndex + 1}問目 / 20問`;
 
   if(currentMode === "jp"){
-
-    document.getElementById("questionType")
-      .textContent = "単語の和訳クイズ";
-
-    document.getElementById("questionText")
-      .textContent = currentQuestion.english;
-
-    document.getElementById("subQuestion")
-      .textContent = "日本語の意味を選びましょう";
-
-    currentAnswer =
-      currentQuestion.japanese;
-
+    document.getElementById("questionType").textContent = "単語の和英クイズ";
+    document.getElementById("questionText").textContent = currentQuestion.english;
+    document.getElementById("subQuestion").textContent = "英語から日本語を選びましょう";
+    currentAnswer = currentQuestion.japanese;
     makeChoices(currentAnswer,"japanese");
   }
 
   if(currentMode === "en"){
-
-    document.getElementById("questionType")
-      .textContent = "単語の英訳クイズ";
-
-    document.getElementById("questionText")
-      .textContent = currentQuestion.japanese;
-
-    document.getElementById("subQuestion")
-      .textContent = "英語を選びましょう";
-
-    currentAnswer =
-      currentQuestion.english;
-
+    document.getElementById("questionType").textContent = "英語の英訳クイズ";
+    document.getElementById("questionText").textContent = currentQuestion.japanese;
+    document.getElementById("subQuestion").textContent = "日本語から英語を選びましょう";
+    currentAnswer = currentQuestion.english;
     makeChoices(currentAnswer,"english");
   }
 
   if(currentMode.startsWith("blank")){
+    const blankData = makeBlankQuestion(
+      currentQuestion.english,
+      currentMode
+    );
 
-    const blankData =
-      makeBlankQuestion(
-        currentQuestion.english,
-        currentMode
-      );
-
-    document.getElementById("questionType")
-      .textContent =
+    document.getElementById("questionType").textContent =
       currentMode === "blank1"
-      ? "穴埋めクイズ レベル1"
+      ? "あなうめクイズ　レベル1"
       : currentMode === "blank2"
-      ? "穴埋めクイズ レベル2"
-      : "穴埋めクイズ レベル3";
+      ? "あなうめクイズ　レベル2"
+      : "あなうめクイズ　レベル3";
 
-    document.getElementById("questionText")
-      .textContent = blankData.blankWord;
-
-    document.getElementById("subQuestion")
-      .textContent =
+    document.getElementById("questionText").textContent = blankData.blankWord;
+    document.getElementById("subQuestion").textContent =
       `意味：${currentQuestion.japanese}`;
 
-    currentAnswer =
-      blankData.answerLetters;
-
+    currentAnswer = blankData.answerLetters;
     makeAlphabetChoices(currentAnswer);
   }
 
@@ -556,134 +450,86 @@ function showQuestion(){
 }
 
 function makeChoices(answer,field){
-
   const choices = [answer];
 
   while(choices.length < 4){
-
     const random =
       wordData[
         Math.floor(Math.random()*wordData.length)
       ][field];
 
-    if(
-      random &&
-      random !== answer &&
-      !choices.includes(random)
-    ){
+    if(random && random !== answer && !choices.includes(random)){
       choices.push(random);
     }
   }
 
   shuffle(choices).forEach(choice => {
-
-    createChoiceButton(
-      choice,
-      choice,
-      answer
-    );
-
+    createChoiceButton(choice, choice, answer);
   });
 }
 
 function makeAlphabetChoices(answer){
-
   const choices = [answer];
-
-  const alphabet =
-    "abcdefghijklmnopqrstuvwxyz".split("");
+  const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
 
   while(choices.length < 4){
-
     let candidate = "";
 
     for(let i=0;i<answer.length;i++){
-
-      candidate +=
-        alphabet[
-          Math.floor(Math.random()*alphabet.length)
-        ];
+      candidate += alphabet[Math.floor(Math.random()*alphabet.length)];
     }
 
-    if(
-      candidate !== answer &&
-      !choices.includes(candidate)
-    ){
+    if(candidate !== answer && !choices.includes(candidate)){
       choices.push(candidate);
     }
   }
 
   shuffle(choices).forEach(choice => {
-
-    createChoiceButton(
-      formatLetters(choice),
-      choice,
-      answer
-    );
-
+    createChoiceButton(formatLetters(choice), choice, answer);
   });
 }
 
 function formatLetters(text){
-
   return text.split("").join("  ");
 }
 
 function createChoiceButton(displayText,value,answer){
-
-  const btn =
-    document.createElement("button");
+  const btn = document.createElement("button");
 
   btn.className = "choice";
-
   btn.textContent = displayText;
-
   btn.dataset.value = value;
+  btn.onclick = () => checkAnswer(btn,value,answer);
 
-  btn.onclick =
-    () => checkAnswer(btn,value,answer);
-
-  document.getElementById("choices")
-    .appendChild(btn);
+  document.getElementById("choices").appendChild(btn);
 }
 
 function makeBlankQuestion(word,mode){
-
   const chars = word.split("");
-
   const letterIndexes = [];
 
   chars.forEach((c,i)=>{
-
     if(/[a-zA-Z]/.test(c)){
       letterIndexes.push(i);
     }
   });
 
-  const inner =
-    letterIndexes.slice(1,-1);
-
+  const inner = letterIndexes.slice(1,-1);
   let hideIndexes = [];
 
   if(mode === "blank1"){
-
     hideIndexes = [
-      inner[
-        Math.floor(Math.random()*inner.length)
-      ]
+      inner[Math.floor(Math.random()*inner.length)]
     ];
   }
 
   if(mode === "blank2"){
+    const count = Math.min(
+      inner.length,
+      Math.random() < 0.5 ? 2 : 3
+    );
 
-    const count =
-      Math.min(
-        inner.length,
-        Math.random() < 0.5 ? 2 : 3
-      );
-
-    hideIndexes =
-      shuffle([...inner])
+    hideIndexes = shuffle([...inner])
       .slice(0,count)
       .sort((a,b)=>a-b);
   }
@@ -695,10 +541,7 @@ function makeBlankQuestion(word,mode){
   let answerLetters = "";
 
   hideIndexes.forEach(i => {
-
-    answerLetters +=
-      chars[i].toLowerCase();
-
+    answerLetters += chars[i].toLowerCase();
     chars[i] = "_";
   });
 
@@ -709,63 +552,41 @@ function makeBlankQuestion(word,mode){
 }
 
 function checkAnswer(button,selected,answer){
-
   if(isAnswered) return;
-
   isAnswered = true;
 
-  const buttons =
-    document.querySelectorAll(".choice");
-
+  const buttons = document.querySelectorAll(".choice");
   buttons.forEach(btn => btn.disabled = true);
 
-  const resultBox =
-    document.getElementById("resultBox");
-
-  const resultMascot =
-    document.getElementById("resultMascot");
-
-  const result =
-    document.getElementById("result");
-
-  const answerText =
-    document.getElementById("answerText");
+  const resultBox = document.getElementById("resultBox");
+  const resultMascot = document.getElementById("resultMascot");
+  const result = document.getElementById("result");
+  const answerText = document.getElementById("answerText");
 
   resultBox.classList.add("show");
 
   if(selected === answer){
-
     score++;
-
     button.classList.add("correct");
 
     resultMascot.textContent = "🎉";
-
-    result.textContent =
-      randomGoodMessage();
-
+    result.textContent = randomGoodMessage();
     result.style.color = "#2eaf37";
 
     playCorrectSound();
-
     createConfetti();
 
   }else{
-
     button.classList.add("wrong");
 
     resultMascot.textContent = "🕊️";
-
     result.textContent = "おしい！";
-
     result.style.color = "#e74c3c";
 
     wrongWords.push(currentQuestion);
-
     playWrongSound();
 
     buttons.forEach(btn => {
-
       if(btn.dataset.value === answer){
         btn.classList.add("correct");
       }
@@ -773,7 +594,6 @@ function checkAnswer(button,selected,answer){
   }
 
   if(currentMode.startsWith("blank")){
-
     answerText.innerHTML =
       `<strong>${currentQuestion.english}</strong><br>${currentQuestion.japanese}`;
 
@@ -782,14 +602,10 @@ function checkAnswer(button,selected,answer){
     },2000);
 
   }else{
-
     if(selected !== answer){
-
       answerText.innerHTML =
         `正解：<strong>${answer}</strong><br>${currentQuestion.english} ／ ${currentQuestion.japanese}`;
-
     }else{
-
       answerText.innerHTML = "";
     }
 
@@ -802,41 +618,29 @@ function checkAnswer(button,selected,answer){
 }
 
 function nextQuestion(){
-
   currentIndex++;
 
   if(currentIndex >= 20){
-
     finishQuiz();
-
   }else{
-
     showQuestion();
   }
 }
 
 function finishQuiz(){
+  document.getElementById("quizScreen").classList.add("hidden");
+  document.getElementById("finishScreen").classList.remove("hidden");
 
-  document.getElementById("quizScreen")
-    .classList.add("hidden");
-
-  document.getElementById("finishScreen")
-    .classList.remove("hidden");
-
-  document.getElementById("finalScore")
-    .textContent =
+  document.getElementById("finalScore").textContent =
     `20問中 ${score}問 正解！`;
 
-  const wrongArea =
-    document.getElementById("wrongArea");
+  const wrongArea = document.getElementById("wrongArea");
 
   if(wrongWords.length === 0){
-
     wrongArea.innerHTML =
       `<p class="practice-message">全問正解！すばらしいです！</p>`;
 
     createConfetti();
-
     return;
   }
 
@@ -844,11 +648,8 @@ function finishQuiz(){
   const seen = new Set();
 
   wrongWords.forEach(w => {
-
     if(!seen.has(w.english)){
-
       seen.add(w.english);
-
       uniqueWrong.push(w);
     }
   });
@@ -864,10 +665,7 @@ function finishQuiz(){
   `;
 
   uniqueWrong.forEach(w => {
-
-    html += `
-    <li>${w.english} ／ ${w.japanese}</li>
-    `;
+    html += `<li>${w.english} ／ ${w.japanese}</li>`;
   });
 
   html += `</ol></div>`;
@@ -876,31 +674,23 @@ function finishQuiz(){
 }
 
 function updateScore(){
-
-  document.getElementById("score")
-    .textContent =
+  document.getElementById("score").textContent =
     `スコア：${score} / ${currentIndex}`;
 }
 
 function backToStart(){
+  speechSynthesis.cancel();
 
-  document.getElementById("quizScreen")
-    .classList.add("hidden");
-
-  document.getElementById("finishScreen")
-    .classList.add("hidden");
-
-  document.getElementById("startScreen")
-    .classList.remove("hidden");
+  document.getElementById("quizScreen").classList.add("hidden");
+  document.getElementById("finishScreen").classList.add("hidden");
+  document.getElementById("startScreen").classList.remove("hidden");
 }
 
 function shuffle(array){
-
   return array.sort(() => Math.random() - 0.5);
 }
 
 function randomGoodMessage(){
-
   const messages = [
     "Great!",
     "Excellent!",
@@ -910,20 +700,15 @@ function randomGoodMessage(){
     "すばらしい！"
   ];
 
-  return messages[
-    Math.floor(Math.random()*messages.length)
-  ];
+  return messages[Math.floor(Math.random()*messages.length)];
 }
 
 function initAudio(){
-
   if(!audioContext){
-
-    audioContext =
-      new (
-        window.AudioContext ||
-        window.webkitAudioContext
-      )();
+    audioContext = new (
+      window.AudioContext ||
+      window.webkitAudioContext
+    )();
   }
 
   if(audioContext.state === "suspended"){
@@ -932,140 +717,71 @@ function initAudio(){
 }
 
 function playCorrectSound(){
-
   if(!audioContext) return;
 
-  const osc =
-    audioContext.createOscillator();
-
-  const gain =
-    audioContext.createGain();
+  const osc = audioContext.createOscillator();
+  const gain = audioContext.createGain();
 
   osc.type = "triangle";
 
-  osc.frequency.setValueAtTime(
-    523,
-    audioContext.currentTime
-  );
+  osc.frequency.setValueAtTime(523,audioContext.currentTime);
+  osc.frequency.setValueAtTime(659,audioContext.currentTime + .1);
+  osc.frequency.setValueAtTime(784,audioContext.currentTime + .2);
 
-  osc.frequency.setValueAtTime(
-    659,
-    audioContext.currentTime + .1
-  );
-
-  osc.frequency.setValueAtTime(
-    784,
-    audioContext.currentTime + .2
-  );
-
-  gain.gain.setValueAtTime(
-    .2,
-    audioContext.currentTime
-  );
-
-  gain.gain.exponentialRampToValueAtTime(
-    .001,
-    audioContext.currentTime + .5
-  );
+  gain.gain.setValueAtTime(.2,audioContext.currentTime);
+  gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime + .5);
 
   osc.connect(gain);
-
   gain.connect(audioContext.destination);
 
   osc.start();
-
   osc.stop(audioContext.currentTime + .5);
 }
 
 function playWrongSound(){
-
   if(!audioContext) return;
 
-  const osc =
-    audioContext.createOscillator();
-
-  const gain =
-    audioContext.createGain();
+  const osc = audioContext.createOscillator();
+  const gain = audioContext.createGain();
 
   osc.type = "sine";
 
-  osc.frequency.setValueAtTime(
-    420,
-    audioContext.currentTime
-  );
+  osc.frequency.setValueAtTime(420,audioContext.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(320,audioContext.currentTime + .25);
 
-  osc.frequency.exponentialRampToValueAtTime(
-    320,
-    audioContext.currentTime + .25
-  );
-
-  gain.gain.setValueAtTime(
-    .08,
-    audioContext.currentTime
-  );
-
-  gain.gain.exponentialRampToValueAtTime(
-    .001,
-    audioContext.currentTime + .35
-  );
+  gain.gain.setValueAtTime(.08,audioContext.currentTime);
+  gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime + .35);
 
   osc.connect(gain);
-
   gain.connect(audioContext.destination);
 
   osc.start();
-
   osc.stop(audioContext.currentTime + .35);
 }
 
 function playStartSound(){
-
   if(!audioContext) return;
 
-  const osc =
-    audioContext.createOscillator();
-
-  const gain =
-    audioContext.createGain();
+  const osc = audioContext.createOscillator();
+  const gain = audioContext.createGain();
 
   osc.type = "square";
 
-  osc.frequency.setValueAtTime(
-    392,
-    audioContext.currentTime
-  );
+  osc.frequency.setValueAtTime(392,audioContext.currentTime);
+  osc.frequency.setValueAtTime(523,audioContext.currentTime + .08);
+  osc.frequency.setValueAtTime(659,audioContext.currentTime + .16);
 
-  osc.frequency.setValueAtTime(
-    523,
-    audioContext.currentTime + .08
-  );
-
-  osc.frequency.setValueAtTime(
-    659,
-    audioContext.currentTime + .16
-  );
-
-  gain.gain.setValueAtTime(
-    .12,
-    audioContext.currentTime
-  );
-
-  gain.gain.exponentialRampToValueAtTime(
-    .001,
-    audioContext.currentTime + .35
-  );
+  gain.gain.setValueAtTime(.12,audioContext.currentTime);
+  gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime + .35);
 
   osc.connect(gain);
-
   gain.connect(audioContext.destination);
 
   osc.start();
-
   osc.stop(audioContext.currentTime + .35);
 }
 
 function createConfetti(){
-
   const colors = [
     "#ff6b6b",
     "#4aa3ff",
@@ -1075,19 +791,12 @@ function createConfetti(){
   ];
 
   for(let i=0;i<20;i++){
-
-    const confetti =
-      document.createElement("div");
+    const confetti = document.createElement("div");
 
     confetti.className = "confetti";
-
-    confetti.style.left =
-      Math.random()*100 + "vw";
-
+    confetti.style.left = Math.random()*100 + "vw";
     confetti.style.backgroundColor =
-      colors[
-        Math.floor(Math.random()*colors.length)
-      ];
+      colors[Math.floor(Math.random()*colors.length)];
 
     document.body.appendChild(confetti);
 
@@ -1097,24 +806,29 @@ function createConfetti(){
   }
 }
 
+function speakCurrentWord(){
+  if(!currentQuestion || !currentQuestion.english) return;
+  speakWord(currentQuestion.english);
+}
+
 function speakWord(word){
+  if(!("speechSynthesis" in window)){
+    alert("このブラウザでは発音機能が使えません。");
+    return;
+  }
 
   speechSynthesis.cancel();
 
-  const utterance =
-    new SpeechSynthesisUtterance(word);
+  const utterance = new SpeechSynthesisUtterance(word);
 
   utterance.lang = "en-US";
-
   utterance.rate = 0.8;
-
   utterance.pitch = 1.0;
 
   speechSynthesis.speak(utterance);
 }
 
 loadCSV();
-
 </script>
 
 </body>
