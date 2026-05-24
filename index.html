@@ -13,15 +13,8 @@ body{
   text-align:center;
   color:#333;
 }
-.app{
-  max-width:760px;
-  margin:auto;
-  padding:18px;
-}
-h1{
-  color:#1976d2;
-  line-height:1.4;
-}
+.app{max-width:760px;margin:auto;padding:18px;}
+h1{color:#1976d2;line-height:1.4;}
 .card{
   background:#fff;
   border-radius:28px;
@@ -30,10 +23,7 @@ h1{
   margin-top:16px;
 }
 .hidden{display:none;}
-.mascot{
-  font-size:54px;
-  animation:bounce 1.2s infinite;
-}
+.mascot{font-size:54px;animation:bounce 1.2s infinite;}
 .menu button,.choice,.main-btn{
   width:100%;
   padding:15px;
@@ -76,10 +66,7 @@ h1{
   margin:20px 0;
   line-height:1.5;
 }
-.sub-question{
-  font-size:20px;
-  color:#555;
-}
+.sub-question{font-size:20px;color:#555;}
 .result-box{
   margin-top:16px;
   padding:16px;
@@ -88,31 +75,11 @@ h1{
   border:3px dashed #8cc8ff;
   display:none;
 }
-.result-box.show{
-  display:block;
-  animation:pop .35s;
-}
-.result{
-  font-size:28px;
-  font-weight:bold;
-}
-.score{
-  margin-top:14px;
-  font-size:18px;
-}
-.next-btn{
-  background:#ff9f43;
-  box-shadow:0 5px 0 #c46c12;
-}
-.back-btn{
-  background:#888;
-  box-shadow:0 5px 0 #555;
-}
-.finish-title{
-  font-size:32px;
-  font-weight:bold;
-  color:#1976d2;
-}
+.result-box.show{display:block;animation:pop .35s;}
+.result{font-size:28px;font-weight:bold;}
+.score{margin-top:14px;font-size:18px;}
+.back-btn{background:#888;box-shadow:0 5px 0 #555;}
+.finish-title{font-size:32px;font-weight:bold;color:#1976d2;}
 .wrong-list{
   text-align:left;
   margin-top:18px;
@@ -120,10 +87,7 @@ h1{
   border-radius:18px;
   padding:16px;
 }
-.wrong-list li{
-  margin:8px 0;
-  font-size:18px;
-}
+.wrong-list li{margin:8px 0;font-size:18px;}
 .practice-message{
   font-size:20px;
   font-weight:bold;
@@ -138,10 +102,7 @@ h1{
   z-index:9999;
   animation:fall 1.5s linear forwards;
 }
-@keyframes pop{
-  0%{transform:scale(.75);}
-  100%{transform:scale(1);}
-}
+@keyframes pop{0%{transform:scale(.75);}100%{transform:scale(1);}}
 @keyframes shake{
   0%{transform:translateX(0);}
   25%{transform:translateX(-8px);}
@@ -149,15 +110,9 @@ h1{
   75%{transform:translateX(-5px);}
   100%{transform:translateX(0);}
 }
-@keyframes bounce{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-8px);}
-}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
 @keyframes fall{
-  100%{
-    transform:translateY(110vh) rotate(720deg);
-    opacity:0;
-  }
+  100%{transform:translateY(110vh) rotate(720deg);opacity:0;}
 }
 </style>
 </head>
@@ -200,7 +155,6 @@ h1{
 
   <div id="score" class="score"></div>
 
-  <button id="nextButton" class="main-btn next-btn hidden" onclick="nextQuestion()">次の問題へ</button>
   <button class="main-btn back-btn" onclick="backToStart()">スタート画面へ</button>
 </div>
 
@@ -222,14 +176,20 @@ let score = 0;
 let currentMode = "";
 let wrongWords = [];
 let currentQuestion = null;
+let currentAnswer = "";
 let audioContext = null;
+let isAnswered = false;
 
 async function loadCSV(){
   try{
     const res = await fetch("english_700_words_list.csv");
     const text = await res.text();
-    wordData = parseCSV(text)
-      .filter(w => w.english && w.japanese);
+
+    wordData = parseCSV(text).filter(w =>
+      w.english &&
+      w.japanese &&
+      /^[a-zA-Z .'-]+$/.test(w.english)
+    );
 
     document.getElementById("loading").classList.add("hidden");
     document.getElementById("startScreen").classList.remove("hidden");
@@ -242,7 +202,8 @@ async function loadCSV(){
 function parseCSV(text){
   text = text.replace(/^\uFEFF/, "");
   const lines = text.trim().split(/\r?\n/);
-  const header = lines[0].split(",");
+  const header = splitCSVLine(lines[0]);
+
   const englishIndex = header.indexOf("English");
   const japaneseIndex = header.indexOf("日本語");
   const noIndex = header.indexOf("No");
@@ -280,6 +241,7 @@ function splitCSVLine(line){
       current += char;
     }
   }
+
   result.push(current);
   return result;
 }
@@ -305,14 +267,18 @@ function startQuiz(mode){
 
 function getUsableWords(mode){
   if(mode.startsWith("blank")){
-    return wordData.filter(w => w.english.replace(/[^a-zA-Z]/g,"").length >= 3);
+    return wordData.filter(w => {
+      const clean = w.english.replace(/[^a-zA-Z]/g,"");
+      return clean.length >= 4;
+    });
   }
   return wordData;
 }
 
 function showQuestion(){
+  isAnswered = false;
+
   document.getElementById("resultBox").classList.remove("show");
-  document.getElementById("nextButton").classList.add("hidden");
   document.getElementById("choices").innerHTML = "";
 
   currentQuestion = quizWords[currentIndex];
@@ -324,29 +290,32 @@ function showQuestion(){
     document.getElementById("questionType").textContent = "単語の和訳クイズ";
     document.getElementById("questionText").textContent = currentQuestion.english;
     document.getElementById("subQuestion").textContent = "日本語の意味を選びましょう";
-    makeChoices(currentQuestion.japanese, "japanese");
+    currentAnswer = currentQuestion.japanese;
+    makeChoices(currentAnswer, "japanese");
   }
 
   if(currentMode === "en"){
     document.getElementById("questionType").textContent = "単語の英訳クイズ";
     document.getElementById("questionText").textContent = currentQuestion.japanese;
     document.getElementById("subQuestion").textContent = "英語を選びましょう";
-    makeChoices(currentQuestion.english, "english");
+    currentAnswer = currentQuestion.english;
+    makeChoices(currentAnswer, "english");
   }
 
   if(currentMode.startsWith("blank")){
+    const blankData = makeBlankQuestion(currentQuestion.english, currentMode);
+
     document.getElementById("questionType").textContent =
       currentMode === "blank1" ? "穴埋めクイズ レベル1" :
       currentMode === "blank2" ? "穴埋めクイズ レベル2" :
       "穴埋めクイズ レベル3";
 
-    document.getElementById("questionText").textContent =
-      makeBlankWord(currentQuestion.english, currentMode);
-
+    document.getElementById("questionText").textContent = blankData.blankWord;
     document.getElementById("subQuestion").textContent =
       `意味：${currentQuestion.japanese}`;
 
-    makeChoices(currentQuestion.english, "english");
+    currentAnswer = blankData.answerLetters;
+    makeAlphabetChoices(currentAnswer);
   }
 
   updateScore();
@@ -364,15 +333,40 @@ function makeChoices(answer, field){
   }
 
   shuffle(choices).forEach(choice => {
-    const btn = document.createElement("button");
-    btn.className = "choice";
-    btn.textContent = choice;
-    btn.onclick = () => checkAnswer(btn, choice, answer);
-    document.getElementById("choices").appendChild(btn);
+    createChoiceButton(choice, answer);
   });
 }
 
-function makeBlankWord(word, mode){
+function makeAlphabetChoices(answer){
+  const choices = [answer];
+  const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+
+  while(choices.length < 4){
+    let candidate = "";
+
+    for(let i=0;i<answer.length;i++){
+      candidate += alphabet[Math.floor(Math.random() * alphabet.length)];
+    }
+
+    if(candidate !== answer && !choices.includes(candidate)){
+      choices.push(candidate);
+    }
+  }
+
+  shuffle(choices).forEach(choice => {
+    createChoiceButton(choice, answer);
+  });
+}
+
+function createChoiceButton(choice, answer){
+  const btn = document.createElement("button");
+  btn.className = "choice";
+  btn.textContent = choice;
+  btn.onclick = () => checkAnswer(btn, choice, answer);
+  document.getElementById("choices").appendChild(btn);
+}
+
+function makeBlankQuestion(word, mode){
   const chars = word.split("");
   const letterIndexes = [];
 
@@ -382,33 +376,39 @@ function makeBlankWord(word, mode){
     }
   });
 
-  if(letterIndexes.length <= 2){
-    return word;
-  }
-
+  const inner = letterIndexes.slice(1,-1);
   let hideIndexes = [];
 
   if(mode === "blank1"){
-    const inner = letterIndexes.slice(1,-1);
-    hideIndexes = [inner[Math.floor(Math.random()*inner.length)]];
+    hideIndexes = [inner[Math.floor(Math.random() * inner.length)]];
   }
 
   if(mode === "blank2"){
-    const inner = letterIndexes.slice(1,-1);
     const count = Math.min(inner.length, Math.random() < 0.5 ? 2 : 3);
-    hideIndexes = shuffle([...inner]).slice(0,count);
+    hideIndexes = shuffle([...inner]).slice(0,count).sort((a,b)=>a-b);
   }
 
   if(mode === "blank3"){
-    hideIndexes = letterIndexes.slice(1,-1);
+    hideIndexes = inner;
   }
 
-  hideIndexes.forEach(i => chars[i] = "_");
+  let answerLetters = "";
 
-  return chars.join(" ");
+  hideIndexes.forEach(i => {
+    answerLetters += chars[i].toLowerCase();
+    chars[i] = "_";
+  });
+
+  return {
+    blankWord: chars.join(" "),
+    answerLetters: answerLetters
+  };
 }
 
 function checkAnswer(button, selected, answer){
+  if(isAnswered) return;
+  isAnswered = true;
+
   const buttons = document.querySelectorAll(".choice");
   buttons.forEach(btn => btn.disabled = true);
 
@@ -434,7 +434,7 @@ function checkAnswer(button, selected, answer){
     result.textContent = "おしい！";
     result.style.color = "#e74c3c";
     answerText.innerHTML =
-      `正解：<strong>${currentQuestion.english}</strong> ／ ${currentQuestion.japanese}`;
+      `正解：<strong>${answer}</strong><br>${currentQuestion.english} ／ ${currentQuestion.japanese}`;
 
     wrongWords.push(currentQuestion);
     playWrongSound();
@@ -446,8 +446,11 @@ function checkAnswer(button, selected, answer){
     });
   }
 
-  document.getElementById("nextButton").classList.remove("hidden");
   updateScore();
+
+  setTimeout(() => {
+    nextQuestion();
+  }, 500);
 }
 
 function nextQuestion(){
@@ -476,6 +479,16 @@ function finishQuiz(){
     return;
   }
 
+  const uniqueWrong = [];
+  const seen = new Set();
+
+  wrongWords.forEach(w => {
+    if(!seen.has(w.english)){
+      seen.add(w.english);
+      uniqueWrong.push(w);
+    }
+  });
+
   let html = `
     <p class="practice-message">
       間違った単語は英語と日本語を３回ずつ書いて練習しましょう！
@@ -485,7 +498,7 @@ function finishQuiz(){
       <ol>
   `;
 
-  wrongWords.forEach(w => {
+  uniqueWrong.forEach(w => {
     html += `<li>${w.english} ／ ${w.japanese}</li>`;
   });
 
@@ -524,6 +537,7 @@ function initAudio(){
 
 function playCorrectSound(){
   if(!audioContext) return;
+
   const osc = audioContext.createOscillator();
   const gain = audioContext.createGain();
 
@@ -543,6 +557,7 @@ function playCorrectSound(){
 
 function playWrongSound(){
   if(!audioContext) return;
+
   const osc = audioContext.createOscillator();
   const gain = audioContext.createGain();
 
@@ -561,6 +576,7 @@ function playWrongSound(){
 
 function playStartSound(){
   if(!audioContext) return;
+
   const osc = audioContext.createOscillator();
   const gain = audioContext.createGain();
 
@@ -581,7 +597,7 @@ function playStartSound(){
 function createConfetti(){
   const colors = ["#ff6b6b","#4aa3ff","#ffd93d","#6bff95","#c77dff"];
 
-  for(let i=0;i<30;i++){
+  for(let i=0;i<20;i++){
     const confetti = document.createElement("div");
     confetti.className = "confetti";
     confetti.style.left = Math.random()*100 + "vw";
