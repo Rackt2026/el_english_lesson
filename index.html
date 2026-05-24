@@ -6,6 +6,7 @@
 <title>まなびやつばめ English Lesson Station</title>
 
 <style>
+
 body{
   margin:0;
   font-family:"Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;
@@ -13,8 +14,18 @@ body{
   text-align:center;
   color:#333;
 }
-.app{max-width:760px;margin:auto;padding:18px;}
-h1{color:#1976d2;line-height:1.4;}
+
+.app{
+  max-width:760px;
+  margin:auto;
+  padding:18px;
+}
+
+h1{
+  color:#1976d2;
+  line-height:1.4;
+}
+
 .card{
   background:#fff;
   border-radius:28px;
@@ -22,9 +33,21 @@ h1{color:#1976d2;line-height:1.4;}
   box-shadow:0 8px 18px rgba(0,0,0,0.15);
   margin-top:16px;
 }
-.hidden{display:none;}
-.mascot{font-size:54px;animation:bounce 1.2s infinite;}
-.menu button,.choice,.main-btn{
+
+.hidden{
+  display:none;
+}
+
+.mascot{
+  font-size:54px;
+  animation:bounce 1.2s infinite;
+}
+
+.menu button,
+.choice,
+.main-btn,
+.speak-btn{
+
   width:100%;
   padding:15px;
   margin:10px 0;
@@ -34,25 +57,38 @@ h1{color:#1976d2;line-height:1.4;}
   font-weight:bold;
   cursor:pointer;
 }
-.menu button,.main-btn{
+
+.menu button,
+.main-btn{
   background:#4aa3ff;
   color:#fff;
   box-shadow:0 5px 0 #226fc0;
 }
+
 .choice{
   background:#fff;
   border:3px solid #4aa3ff;
 }
+
 .choice.correct{
   background:#d8ffd8;
   border-color:#32b332;
   animation:pop .4s;
 }
+
 .choice.wrong{
   background:#ffe1e1;
   border-color:#e74c3c;
   animation:shake .35s;
 }
+
+.speak-btn{
+  background:#ffb347;
+  color:#fff;
+  box-shadow:0 5px 0 #d98200;
+  font-size:20px;
+}
+
 .question-type{
   display:inline-block;
   background:#fff0a8;
@@ -60,13 +96,19 @@ h1{color:#1976d2;line-height:1.4;}
   border-radius:999px;
   font-weight:bold;
 }
+
 .question{
   font-size:34px;
   font-weight:bold;
   margin:20px 0;
   line-height:1.5;
 }
-.sub-question{font-size:20px;color:#555;}
+
+.sub-question{
+  font-size:20px;
+  color:#555;
+}
+
 .result-box{
   margin-top:16px;
   padding:16px;
@@ -75,17 +117,40 @@ h1{color:#1976d2;line-height:1.4;}
   border:3px dashed #8cc8ff;
   display:none;
 }
-.result-box.show{display:block;animation:pop .35s;}
-.result{font-size:28px;font-weight:bold;}
+
+.result-box.show{
+  display:block;
+  animation:pop .35s;
+}
+
+.result{
+  font-size:28px;
+  font-weight:bold;
+}
+
 .answer-show{
   font-size:24px;
   font-weight:bold;
   line-height:1.6;
   margin-top:8px;
 }
-.score{margin-top:14px;font-size:18px;}
-.back-btn{background:#888;box-shadow:0 5px 0 #555;}
-.finish-title{font-size:32px;font-weight:bold;color:#1976d2;}
+
+.score{
+  margin-top:14px;
+  font-size:18px;
+}
+
+.back-btn{
+  background:#888;
+  box-shadow:0 5px 0 #555;
+}
+
+.finish-title{
+  font-size:32px;
+  font-weight:bold;
+  color:#1976d2;
+}
+
 .wrong-list{
   text-align:left;
   margin-top:18px;
@@ -93,13 +158,19 @@ h1{color:#1976d2;line-height:1.4;}
   border-radius:18px;
   padding:16px;
 }
-.wrong-list li{margin:8px 0;font-size:18px;}
+
+.wrong-list li{
+  margin:8px 0;
+  font-size:18px;
+}
+
 .practice-message{
   font-size:20px;
   font-weight:bold;
   color:#d35400;
   line-height:1.6;
 }
+
 .confetti{
   position:fixed;
   width:12px;
@@ -108,7 +179,12 @@ h1{color:#1976d2;line-height:1.4;}
   z-index:9999;
   animation:fall 1.5s linear forwards;
 }
-@keyframes pop{0%{transform:scale(.75);}100%{transform:scale(1);}}
+
+@keyframes pop{
+  0%{transform:scale(.75);}
+  100%{transform:scale(1);}
+}
+
 @keyframes shake{
   0%{transform:translateX(0);}
   25%{transform:translateX(-8px);}
@@ -116,10 +192,19 @@ h1{color:#1976d2;line-height:1.4;}
   75%{transform:translateX(-5px);}
   100%{transform:translateX(0);}
 }
-@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
-@keyframes fall{
-  100%{transform:translateY(110vh) rotate(720deg);opacity:0;}
+
+@keyframes bounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-8px);}
 }
+
+@keyframes fall{
+  100%{
+    transform:translateY(110vh) rotate(720deg);
+    opacity:0;
+  }
+}
+
 </style>
 </head>
 
@@ -127,7 +212,11 @@ h1{color:#1976d2;line-height:1.4;}
 
 <div class="app">
 
-<h1>まなびやつばめ<br>English Lesson Station</h1>
+<h1>
+まなびやつばめ<br>
+English Lesson Station
+</h1>
+
 <p>英単語を楽しくれんしゅうしよう！</p>
 
 <div id="loading" class="card">
@@ -136,7 +225,9 @@ h1{color:#1976d2;line-height:1.4;}
 </div>
 
 <div id="startScreen" class="card hidden">
+
   <div class="mascot">🕊️</div>
+
   <div class="menu">
     <button onclick="startQuiz('jp')">単語の和訳クイズ</button>
     <button onclick="startQuiz('en')">単語の英訳クイズ</button>
@@ -144,37 +235,68 @@ h1{color:#1976d2;line-height:1.4;}
     <button onclick="startQuiz('blank2')">穴埋めクイズ レベル2</button>
     <button onclick="startQuiz('blank3')">穴埋めクイズ レベル3</button>
   </div>
+
 </div>
 
 <div id="quizScreen" class="card hidden">
+
   <div id="questionType" class="question-type"></div>
+
   <div id="countText" class="score"></div>
+
   <div id="questionText" class="question"></div>
+
+  <button class="speak-btn"
+    onclick="speakWord(currentQuestion.english)">
+    🔊 発音を聞く
+  </button>
+
   <div id="subQuestion" class="sub-question"></div>
+
   <div id="choices"></div>
 
   <div id="resultBox" class="result-box">
+
     <div id="resultMascot" class="mascot">🎉</div>
+
     <div id="result" class="result"></div>
+
     <div id="answerText" class="answer-show"></div>
+
   </div>
 
   <div id="score" class="score"></div>
 
-  <button class="main-btn back-btn" onclick="backToStart()">スタート画面へ</button>
+  <button class="main-btn back-btn"
+    onclick="backToStart()">
+    スタート画面へ
+  </button>
+
 </div>
 
 <div id="finishScreen" class="card hidden">
+
   <div class="mascot">🏆</div>
-  <div class="finish-title">20問終了！</div>
+
+  <div class="finish-title">
+    20問終了！
+  </div>
+
   <div id="finalScore" class="result"></div>
+
   <div id="wrongArea"></div>
-  <button class="main-btn back-btn" onclick="backToStart()">スタート画面へ</button>
+
+  <button class="main-btn back-btn"
+    onclick="backToStart()">
+    スタート画面へ
+  </button>
+
 </div>
 
 </div>
 
 <script>
+
 let wordData = [];
 let quizWords = [];
 let currentIndex = 0;
@@ -187,52 +309,80 @@ let audioContext = null;
 let isAnswered = false;
 
 async function loadCSV(){
+
   try{
-    const res = await fetch("english_700_words_list.csv");
-    const text = await res.text();
 
-    wordData = parseCSV(text).filter(w =>
-      w.english &&
-      w.japanese &&
-      /^[a-zA-Z .'-]+$/.test(w.english)
-    );
+    const res =
+      await fetch("english_700_words_list.csv");
 
-    document.getElementById("loading").classList.add("hidden");
-    document.getElementById("startScreen").classList.remove("hidden");
+    const text =
+      await res.text();
+
+    wordData =
+      parseCSV(text).filter(w =>
+        w.english &&
+        w.japanese &&
+        /^[a-zA-Z .'-]+$/.test(w.english)
+      );
+
+    document.getElementById("loading")
+      .classList.add("hidden");
+
+    document.getElementById("startScreen")
+      .classList.remove("hidden");
+
   }catch(e){
-    document.getElementById("loading").innerHTML =
-      "CSVが読み込めませんでした。<br>english_700_words_list.csv を index.html と同じ場所に置いてください。";
+
+    document.getElementById("loading")
+      .innerHTML =
+      "CSVが読み込めませんでした";
   }
 }
 
 function parseCSV(text){
-  text = text.replace(/^\uFEFF/, "");
-  const lines = text.trim().split(/\r?\n/);
-  const header = splitCSVLine(lines[0]);
 
-  const englishIndex = header.indexOf("English");
-  const japaneseIndex = header.indexOf("日本語");
-  const noIndex = header.indexOf("No");
+  text = text.replace(/^\uFEFF/, "");
+
+  const lines =
+    text.trim().split(/\r?\n/);
+
+  const header =
+    splitCSVLine(lines[0]);
+
+  const englishIndex =
+    header.indexOf("English");
+
+  const japaneseIndex =
+    header.indexOf("日本語");
+
+  const noIndex =
+    header.indexOf("No");
 
   const data = [];
 
   for(let i=1;i<lines.length;i++){
-    const cols = splitCSVLine(lines[i]);
+
+    const cols =
+      splitCSVLine(lines[i]);
+
     data.push({
       no: cols[noIndex] || i,
       english: cols[englishIndex],
       japanese: cols[japaneseIndex]
     });
   }
+
   return data;
 }
 
 function splitCSVLine(line){
+
   const result = [];
   let current = "";
   let inQuotes = false;
 
   for(let i=0;i<line.length;i++){
+
     const char = line[i];
 
     if(char === '"' && line[i+1] === '"'){
@@ -249,155 +399,275 @@ function splitCSVLine(line){
   }
 
   result.push(current);
+
   return result;
 }
 
 function startQuiz(mode){
+
   initAudio();
+
   playStartSound();
 
   currentMode = mode;
+
   currentIndex = 0;
+
   score = 0;
+
   wrongWords = [];
 
-  const usableWords = getUsableWords(mode);
-  quizWords = shuffle([...usableWords]).slice(0,20);
+  const usableWords =
+    getUsableWords(mode);
 
-  document.getElementById("startScreen").classList.add("hidden");
-  document.getElementById("finishScreen").classList.add("hidden");
-  document.getElementById("quizScreen").classList.remove("hidden");
+  quizWords =
+    shuffle([...usableWords]).slice(0,20);
+
+  document.getElementById("startScreen")
+    .classList.add("hidden");
+
+  document.getElementById("finishScreen")
+    .classList.add("hidden");
+
+  document.getElementById("quizScreen")
+    .classList.remove("hidden");
 
   showQuestion();
 }
 
 function getUsableWords(mode){
+
   if(mode.startsWith("blank")){
+
     return wordData.filter(w => {
-      const clean = w.english.replace(/[^a-zA-Z]/g,"");
+
+      const clean =
+        w.english.replace(/[^a-zA-Z]/g,"");
+
       return clean.length >= 4;
     });
   }
+
   return wordData;
 }
 
 function showQuestion(){
+
   isAnswered = false;
 
-  document.getElementById("resultBox").classList.remove("show");
-  document.getElementById("choices").innerHTML = "";
-  document.getElementById("answerText").innerHTML = "";
+  document.getElementById("resultBox")
+    .classList.remove("show");
 
-  currentQuestion = quizWords[currentIndex];
+  document.getElementById("choices")
+    .innerHTML = "";
 
-  document.getElementById("countText").textContent =
+  document.getElementById("answerText")
+    .innerHTML = "";
+
+  currentQuestion =
+    quizWords[currentIndex];
+
+  document.getElementById("countText")
+    .textContent =
     `${currentIndex + 1}問目 / 20問`;
 
   if(currentMode === "jp"){
-    document.getElementById("questionType").textContent = "単語の和訳クイズ";
-    document.getElementById("questionText").textContent = currentQuestion.english;
-    document.getElementById("subQuestion").textContent = "日本語の意味を選びましょう";
-    currentAnswer = currentQuestion.japanese;
-    makeChoices(currentAnswer, "japanese");
+
+    document.getElementById("questionType")
+      .textContent = "単語の和訳クイズ";
+
+    document.getElementById("questionText")
+      .textContent = currentQuestion.english;
+
+    document.getElementById("subQuestion")
+      .textContent = "日本語の意味を選びましょう";
+
+    currentAnswer =
+      currentQuestion.japanese;
+
+    makeChoices(currentAnswer,"japanese");
   }
 
   if(currentMode === "en"){
-    document.getElementById("questionType").textContent = "単語の英訳クイズ";
-    document.getElementById("questionText").textContent = currentQuestion.japanese;
-    document.getElementById("subQuestion").textContent = "英語を選びましょう";
-    currentAnswer = currentQuestion.english;
-    makeChoices(currentAnswer, "english");
+
+    document.getElementById("questionType")
+      .textContent = "単語の英訳クイズ";
+
+    document.getElementById("questionText")
+      .textContent = currentQuestion.japanese;
+
+    document.getElementById("subQuestion")
+      .textContent = "英語を選びましょう";
+
+    currentAnswer =
+      currentQuestion.english;
+
+    makeChoices(currentAnswer,"english");
   }
 
   if(currentMode.startsWith("blank")){
-    const blankData = makeBlankQuestion(currentQuestion.english, currentMode);
 
-    document.getElementById("questionType").textContent =
-      currentMode === "blank1" ? "穴埋めクイズ レベル1" :
-      currentMode === "blank2" ? "穴埋めクイズ レベル2" :
-      "穴埋めクイズ レベル3";
+    const blankData =
+      makeBlankQuestion(
+        currentQuestion.english,
+        currentMode
+      );
 
-    document.getElementById("questionText").textContent = blankData.blankWord;
-    document.getElementById("subQuestion").textContent =
+    document.getElementById("questionType")
+      .textContent =
+      currentMode === "blank1"
+      ? "穴埋めクイズ レベル1"
+      : currentMode === "blank2"
+      ? "穴埋めクイズ レベル2"
+      : "穴埋めクイズ レベル3";
+
+    document.getElementById("questionText")
+      .textContent = blankData.blankWord;
+
+    document.getElementById("subQuestion")
+      .textContent =
       `意味：${currentQuestion.japanese}`;
 
-    currentAnswer = blankData.answerLetters;
+    currentAnswer =
+      blankData.answerLetters;
+
     makeAlphabetChoices(currentAnswer);
   }
 
   updateScore();
 }
 
-function makeChoices(answer, field){
+function makeChoices(answer,field){
+
   const choices = [answer];
 
   while(choices.length < 4){
-    const random = wordData[Math.floor(Math.random() * wordData.length)][field];
 
-    if(random && random !== answer && !choices.includes(random)){
+    const random =
+      wordData[
+        Math.floor(Math.random()*wordData.length)
+      ][field];
+
+    if(
+      random &&
+      random !== answer &&
+      !choices.includes(random)
+    ){
       choices.push(random);
     }
   }
 
   shuffle(choices).forEach(choice => {
-    createChoiceButton(choice, choice, answer);
+
+    createChoiceButton(
+      choice,
+      choice,
+      answer
+    );
+
   });
 }
 
 function makeAlphabetChoices(answer){
+
   const choices = [answer];
-  const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+
+  const alphabet =
+    "abcdefghijklmnopqrstuvwxyz".split("");
 
   while(choices.length < 4){
+
     let candidate = "";
 
     for(let i=0;i<answer.length;i++){
-      candidate += alphabet[Math.floor(Math.random() * alphabet.length)];
+
+      candidate +=
+        alphabet[
+          Math.floor(Math.random()*alphabet.length)
+        ];
     }
 
-    if(candidate !== answer && !choices.includes(candidate)){
+    if(
+      candidate !== answer &&
+      !choices.includes(candidate)
+    ){
       choices.push(candidate);
     }
   }
 
   shuffle(choices).forEach(choice => {
-    createChoiceButton(formatLetters(choice), choice, answer);
+
+    createChoiceButton(
+      formatLetters(choice),
+      choice,
+      answer
+    );
+
   });
 }
 
 function formatLetters(text){
+
   return text.split("").join("  ");
 }
 
-function createChoiceButton(displayText, value, answer){
-  const btn = document.createElement("button");
+function createChoiceButton(displayText,value,answer){
+
+  const btn =
+    document.createElement("button");
+
   btn.className = "choice";
+
   btn.textContent = displayText;
+
   btn.dataset.value = value;
-  btn.onclick = () => checkAnswer(btn, value, answer);
-  document.getElementById("choices").appendChild(btn);
+
+  btn.onclick =
+    () => checkAnswer(btn,value,answer);
+
+  document.getElementById("choices")
+    .appendChild(btn);
 }
 
-function makeBlankQuestion(word, mode){
+function makeBlankQuestion(word,mode){
+
   const chars = word.split("");
+
   const letterIndexes = [];
 
   chars.forEach((c,i)=>{
+
     if(/[a-zA-Z]/.test(c)){
       letterIndexes.push(i);
     }
   });
 
-  const inner = letterIndexes.slice(1,-1);
+  const inner =
+    letterIndexes.slice(1,-1);
+
   let hideIndexes = [];
 
   if(mode === "blank1"){
-    hideIndexes = [inner[Math.floor(Math.random() * inner.length)]];
+
+    hideIndexes = [
+      inner[
+        Math.floor(Math.random()*inner.length)
+      ]
+    ];
   }
 
   if(mode === "blank2"){
-    const count = Math.min(inner.length, Math.random() < 0.5 ? 2 : 3);
-    hideIndexes = shuffle([...inner]).slice(0,count).sort((a,b)=>a-b);
+
+    const count =
+      Math.min(
+        inner.length,
+        Math.random() < 0.5 ? 2 : 3
+      );
+
+    hideIndexes =
+      shuffle([...inner])
+      .slice(0,count)
+      .sort((a,b)=>a-b);
   }
 
   if(mode === "blank3"){
@@ -407,7 +677,10 @@ function makeBlankQuestion(word, mode){
   let answerLetters = "";
 
   hideIndexes.forEach(i => {
-    answerLetters += chars[i].toLowerCase();
+
+    answerLetters +=
+      chars[i].toLowerCase();
+
     chars[i] = "_";
   });
 
@@ -417,37 +690,64 @@ function makeBlankQuestion(word, mode){
   };
 }
 
-function checkAnswer(button, selected, answer){
+function checkAnswer(button,selected,answer){
+
   if(isAnswered) return;
+
   isAnswered = true;
 
-  const buttons = document.querySelectorAll(".choice");
+  const buttons =
+    document.querySelectorAll(".choice");
+
   buttons.forEach(btn => btn.disabled = true);
 
-  const resultBox = document.getElementById("resultBox");
-  const resultMascot = document.getElementById("resultMascot");
-  const result = document.getElementById("result");
-  const answerText = document.getElementById("answerText");
+  const resultBox =
+    document.getElementById("resultBox");
+
+  const resultMascot =
+    document.getElementById("resultMascot");
+
+  const result =
+    document.getElementById("result");
+
+  const answerText =
+    document.getElementById("answerText");
 
   resultBox.classList.add("show");
 
   if(selected === answer){
+
     score++;
+
     button.classList.add("correct");
+
     resultMascot.textContent = "🎉";
-    result.textContent = randomGoodMessage();
+
+    result.textContent =
+      randomGoodMessage();
+
     result.style.color = "#2eaf37";
+
     playCorrectSound();
+
     createConfetti();
+
   }else{
+
     button.classList.add("wrong");
+
     resultMascot.textContent = "🕊️";
+
     result.textContent = "おしい！";
+
     result.style.color = "#e74c3c";
+
     wrongWords.push(currentQuestion);
+
     playWrongSound();
 
     buttons.forEach(btn => {
+
       if(btn.dataset.value === answer){
         btn.classList.add("correct");
       }
@@ -455,51 +755,70 @@ function checkAnswer(button, selected, answer){
   }
 
   if(currentMode.startsWith("blank")){
+
     answerText.innerHTML =
       `<strong>${currentQuestion.english}</strong><br>${currentQuestion.japanese}`;
 
     setTimeout(() => {
       nextQuestion();
-    }, 2000);
+    },2000);
+
   }else{
+
     if(selected !== answer){
+
       answerText.innerHTML =
         `正解：<strong>${answer}</strong><br>${currentQuestion.english} ／ ${currentQuestion.japanese}`;
+
     }else{
+
       answerText.innerHTML = "";
     }
 
     setTimeout(() => {
       nextQuestion();
-    }, 500);
+    },500);
   }
 
   updateScore();
 }
 
 function nextQuestion(){
+
   currentIndex++;
 
   if(currentIndex >= 20){
+
     finishQuiz();
+
   }else{
+
     showQuestion();
   }
 }
 
 function finishQuiz(){
-  document.getElementById("quizScreen").classList.add("hidden");
-  document.getElementById("finishScreen").classList.remove("hidden");
 
-  document.getElementById("finalScore").textContent =
+  document.getElementById("quizScreen")
+    .classList.add("hidden");
+
+  document.getElementById("finishScreen")
+    .classList.remove("hidden");
+
+  document.getElementById("finalScore")
+    .textContent =
     `20問中 ${score}問 正解！`;
 
-  const wrongArea = document.getElementById("wrongArea");
+  const wrongArea =
+    document.getElementById("wrongArea");
 
   if(wrongWords.length === 0){
+
     wrongArea.innerHTML =
       `<p class="practice-message">全問正解！すばらしいです！</p>`;
+
     createConfetti();
+
     return;
   }
 
@@ -507,52 +826,86 @@ function finishQuiz(){
   const seen = new Set();
 
   wrongWords.forEach(w => {
+
     if(!seen.has(w.english)){
+
       seen.add(w.english);
+
       uniqueWrong.push(w);
     }
   });
 
   let html = `
-    <p class="practice-message">
-      間違った単語は英語と日本語を３回ずつ書いて練習しましょう！
-    </p>
-    <div class="wrong-list">
-      <strong>間違った単語一覧</strong>
-      <ol>
+  <p class="practice-message">
+  間違った単語は英語と日本語を３回ずつ書いて練習しましょう！
+  </p>
+
+  <div class="wrong-list">
+  <strong>間違った単語一覧</strong>
+  <ol>
   `;
 
   uniqueWrong.forEach(w => {
-    html += `<li>${w.english} ／ ${w.japanese}</li>`;
+
+    html += `
+    <li>${w.english} ／ ${w.japanese}</li>
+    `;
   });
 
   html += `</ol></div>`;
+
   wrongArea.innerHTML = html;
 }
 
 function updateScore(){
-  document.getElementById("score").textContent =
+
+  document.getElementById("score")
+    .textContent =
     `スコア：${score} / ${currentIndex}`;
 }
 
 function backToStart(){
-  document.getElementById("quizScreen").classList.add("hidden");
-  document.getElementById("finishScreen").classList.add("hidden");
-  document.getElementById("startScreen").classList.remove("hidden");
+
+  document.getElementById("quizScreen")
+    .classList.add("hidden");
+
+  document.getElementById("finishScreen")
+    .classList.add("hidden");
+
+  document.getElementById("startScreen")
+    .classList.remove("hidden");
 }
 
 function shuffle(array){
+
   return array.sort(() => Math.random() - 0.5);
 }
 
 function randomGoodMessage(){
-  const messages = ["Great!","Excellent!","Perfect!","Good job!","やったね！","すばらしい！"];
-  return messages[Math.floor(Math.random()*messages.length)];
+
+  const messages = [
+    "Great!",
+    "Excellent!",
+    "Perfect!",
+    "Good job!",
+    "やったね！",
+    "すばらしい！"
+  ];
+
+  return messages[
+    Math.floor(Math.random()*messages.length)
+  ];
 }
 
 function initAudio(){
+
   if(!audioContext){
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    audioContext =
+      new (
+        window.AudioContext ||
+        window.webkitAudioContext
+      )();
   }
 
   if(audioContext.state === "suspended"){
@@ -561,79 +914,189 @@ function initAudio(){
 }
 
 function playCorrectSound(){
+
   if(!audioContext) return;
 
-  const osc = audioContext.createOscillator();
-  const gain = audioContext.createGain();
+  const osc =
+    audioContext.createOscillator();
+
+  const gain =
+    audioContext.createGain();
 
   osc.type = "triangle";
-  osc.frequency.setValueAtTime(523,audioContext.currentTime);
-  osc.frequency.setValueAtTime(659,audioContext.currentTime + .1);
-  osc.frequency.setValueAtTime(784,audioContext.currentTime + .2);
 
-  gain.gain.setValueAtTime(.2,audioContext.currentTime);
-  gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime + .5);
+  osc.frequency.setValueAtTime(
+    523,
+    audioContext.currentTime
+  );
+
+  osc.frequency.setValueAtTime(
+    659,
+    audioContext.currentTime + .1
+  );
+
+  osc.frequency.setValueAtTime(
+    784,
+    audioContext.currentTime + .2
+  );
+
+  gain.gain.setValueAtTime(
+    .2,
+    audioContext.currentTime
+  );
+
+  gain.gain.exponentialRampToValueAtTime(
+    .001,
+    audioContext.currentTime + .5
+  );
 
   osc.connect(gain);
+
   gain.connect(audioContext.destination);
+
   osc.start();
+
   osc.stop(audioContext.currentTime + .5);
 }
 
 function playWrongSound(){
+
   if(!audioContext) return;
 
-  const osc = audioContext.createOscillator();
-  const gain = audioContext.createGain();
+  const osc =
+    audioContext.createOscillator();
+
+  const gain =
+    audioContext.createGain();
 
   osc.type = "sine";
-  osc.frequency.setValueAtTime(420,audioContext.currentTime);
-  osc.frequency.exponentialRampToValueAtTime(320,audioContext.currentTime + .25);
 
-  gain.gain.setValueAtTime(.08,audioContext.currentTime);
-  gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime + .35);
+  osc.frequency.setValueAtTime(
+    420,
+    audioContext.currentTime
+  );
+
+  osc.frequency.exponentialRampToValueAtTime(
+    320,
+    audioContext.currentTime + .25
+  );
+
+  gain.gain.setValueAtTime(
+    .08,
+    audioContext.currentTime
+  );
+
+  gain.gain.exponentialRampToValueAtTime(
+    .001,
+    audioContext.currentTime + .35
+  );
 
   osc.connect(gain);
+
   gain.connect(audioContext.destination);
+
   osc.start();
+
   osc.stop(audioContext.currentTime + .35);
 }
 
 function playStartSound(){
+
   if(!audioContext) return;
 
-  const osc = audioContext.createOscillator();
-  const gain = audioContext.createGain();
+  const osc =
+    audioContext.createOscillator();
+
+  const gain =
+    audioContext.createGain();
 
   osc.type = "square";
-  osc.frequency.setValueAtTime(392,audioContext.currentTime);
-  osc.frequency.setValueAtTime(523,audioContext.currentTime + .08);
-  osc.frequency.setValueAtTime(659,audioContext.currentTime + .16);
 
-  gain.gain.setValueAtTime(.12,audioContext.currentTime);
-  gain.gain.exponentialRampToValueAtTime(.001,audioContext.currentTime + .35);
+  osc.frequency.setValueAtTime(
+    392,
+    audioContext.currentTime
+  );
+
+  osc.frequency.setValueAtTime(
+    523,
+    audioContext.currentTime + .08
+  );
+
+  osc.frequency.setValueAtTime(
+    659,
+    audioContext.currentTime + .16
+  );
+
+  gain.gain.setValueAtTime(
+    .12,
+    audioContext.currentTime
+  );
+
+  gain.gain.exponentialRampToValueAtTime(
+    .001,
+    audioContext.currentTime + .35
+  );
 
   osc.connect(gain);
+
   gain.connect(audioContext.destination);
+
   osc.start();
+
   osc.stop(audioContext.currentTime + .35);
 }
 
 function createConfetti(){
-  const colors = ["#ff6b6b","#4aa3ff","#ffd93d","#6bff95","#c77dff"];
+
+  const colors = [
+    "#ff6b6b",
+    "#4aa3ff",
+    "#ffd93d",
+    "#6bff95",
+    "#c77dff"
+  ];
 
   for(let i=0;i<20;i++){
-    const confetti = document.createElement("div");
+
+    const confetti =
+      document.createElement("div");
+
     confetti.className = "confetti";
-    confetti.style.left = Math.random()*100 + "vw";
-    confetti.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+
+    confetti.style.left =
+      Math.random()*100 + "vw";
+
+    confetti.style.backgroundColor =
+      colors[
+        Math.floor(Math.random()*colors.length)
+      ];
+
     document.body.appendChild(confetti);
 
-    setTimeout(()=>confetti.remove(),1500);
+    setTimeout(()=>{
+      confetti.remove();
+    },1500);
   }
 }
 
+function speakWord(word){
+
+  speechSynthesis.cancel();
+
+  const utterance =
+    new SpeechSynthesisUtterance(word);
+
+  utterance.lang = "en-US";
+
+  utterance.rate = 0.8;
+
+  utterance.pitch = 1.0;
+
+  speechSynthesis.speak(utterance);
+}
+
 loadCSV();
+
 </script>
 
 </body>
