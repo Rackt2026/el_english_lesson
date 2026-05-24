@@ -77,6 +77,12 @@ h1{color:#1976d2;line-height:1.4;}
 }
 .result-box.show{display:block;animation:pop .35s;}
 .result{font-size:28px;font-weight:bold;}
+.answer-show{
+  font-size:24px;
+  font-weight:bold;
+  line-height:1.6;
+  margin-top:8px;
+}
 .score{margin-top:14px;font-size:18px;}
 .back-btn{background:#888;box-shadow:0 5px 0 #555;}
 .finish-title{font-size:32px;font-weight:bold;color:#1976d2;}
@@ -150,7 +156,7 @@ h1{color:#1976d2;line-height:1.4;}
   <div id="resultBox" class="result-box">
     <div id="resultMascot" class="mascot">🎉</div>
     <div id="result" class="result"></div>
-    <div id="answerText"></div>
+    <div id="answerText" class="answer-show"></div>
   </div>
 
   <div id="score" class="score"></div>
@@ -280,6 +286,7 @@ function showQuestion(){
 
   document.getElementById("resultBox").classList.remove("show");
   document.getElementById("choices").innerHTML = "";
+  document.getElementById("answerText").innerHTML = "";
 
   currentQuestion = quizWords[currentIndex];
 
@@ -333,7 +340,7 @@ function makeChoices(answer, field){
   }
 
   shuffle(choices).forEach(choice => {
-    createChoiceButton(choice, answer);
+    createChoiceButton(choice, choice, answer);
   });
 }
 
@@ -354,15 +361,20 @@ function makeAlphabetChoices(answer){
   }
 
   shuffle(choices).forEach(choice => {
-    createChoiceButton(choice, answer);
+    createChoiceButton(formatLetters(choice), choice, answer);
   });
 }
 
-function createChoiceButton(choice, answer){
+function formatLetters(text){
+  return text.split("").join("  ");
+}
+
+function createChoiceButton(displayText, value, answer){
   const btn = document.createElement("button");
   btn.className = "choice";
-  btn.textContent = choice;
-  btn.onclick = () => checkAnswer(btn, choice, answer);
+  btn.textContent = displayText;
+  btn.dataset.value = value;
+  btn.onclick = () => checkAnswer(btn, value, answer);
   document.getElementById("choices").appendChild(btn);
 }
 
@@ -425,7 +437,6 @@ function checkAnswer(button, selected, answer){
     resultMascot.textContent = "🎉";
     result.textContent = randomGoodMessage();
     result.style.color = "#2eaf37";
-    answerText.textContent = "";
     playCorrectSound();
     createConfetti();
   }else{
@@ -433,24 +444,37 @@ function checkAnswer(button, selected, answer){
     resultMascot.textContent = "🕊️";
     result.textContent = "おしい！";
     result.style.color = "#e74c3c";
-    answerText.innerHTML =
-      `正解：<strong>${answer}</strong><br>${currentQuestion.english} ／ ${currentQuestion.japanese}`;
-
     wrongWords.push(currentQuestion);
     playWrongSound();
 
     buttons.forEach(btn => {
-      if(btn.textContent === answer){
+      if(btn.dataset.value === answer){
         btn.classList.add("correct");
       }
     });
   }
 
-  updateScore();
+  if(currentMode.startsWith("blank")){
+    answerText.innerHTML =
+      `<strong>${currentQuestion.english}</strong><br>${currentQuestion.japanese}`;
 
-  setTimeout(() => {
-    nextQuestion();
-  }, 500);
+    setTimeout(() => {
+      nextQuestion();
+    }, 2000);
+  }else{
+    if(selected !== answer){
+      answerText.innerHTML =
+        `正解：<strong>${answer}</strong><br>${currentQuestion.english} ／ ${currentQuestion.japanese}`;
+    }else{
+      answerText.innerHTML = "";
+    }
+
+    setTimeout(() => {
+      nextQuestion();
+    }, 500);
+  }
+
+  updateScore();
 }
 
 function nextQuestion(){
@@ -530,6 +554,7 @@ function initAudio(){
   if(!audioContext){
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
   }
+
   if(audioContext.state === "suspended"){
     audioContext.resume();
   }
