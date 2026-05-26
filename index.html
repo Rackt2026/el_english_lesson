@@ -6,55 +6,16 @@
 <title>まなびやつばめ English Lesson</title>
 
 <style>
-body{
-  margin:0;
-  font-family:"Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;
-  background:linear-gradient(135deg,#dff4ff,#fff6cf);
-  text-align:center;
-  color:#333;
-}
-
-.app{
-  max-width:760px;
-  margin:auto;
-  padding:18px;
-}
-
-.top-logo{
-  width:220px;
-  max-width:80%;
-  margin-bottom:18px;
-  transition:0.2s;
-}
-
-.top-logo:hover{
-  transform:scale(1.03);
-}
-
-h1{
-  color:#1976d2;
-  line-height:1.4;
-}
-
-.card{
-  background:#fff;
-  border-radius:28px;
-  padding:22px;
-  box-shadow:0 8px 18px rgba(0,0,0,0.15);
-  margin-top:16px;
-}
-
-.hidden{
-  display:none;
-}
-
-.mascot{
-  font-size:54px;
-  animation:bounce 1.2s infinite;
-}
+body{margin:0;font-family:"Hiragino Maru Gothic ProN","Yu Gothic",sans-serif;background:linear-gradient(135deg,#dff4ff,#fff6cf);text-align:center;color:#333;}
+.app{max-width:760px;margin:auto;padding:18px;}
+.top-logo{width:220px;max-width:80%;margin-bottom:18px;transition:0.2s;}
+.top-logo:hover{transform:scale(1.03);}
+h1{color:#1976d2;line-height:1.4;}
+.card{background:#fff;border-radius:28px;padding:22px;box-shadow:0 8px 18px rgba(0,0,0,0.15);margin-top:16px;}
+.hidden{display:none;}
+.mascot{font-size:54px;animation:bounce 1.2s infinite;}
 
 .menu button,
-.choice,
 .main-btn,
 .speak-btn{
   width:100%;
@@ -67,152 +28,65 @@ h1{
   cursor:pointer;
 }
 
-.menu button,
-.main-btn{
-  background:#4aa3ff;
-  color:#fff;
-  box-shadow:0 5px 0 #226fc0;
+#choices{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:16px;
 }
 
 .choice{
+  width:100%;
+  min-height:74px;
+  padding:12px;
+  margin:0;
+  border-radius:18px;
+  font-size:20px;
+  font-weight:bold;
+  cursor:pointer;
   background:#fff;
   border:3px solid #4aa3ff;
+  word-break:break-word;
 }
 
-.choice.correct{
-  background:#d8ffd8;
-  border-color:#32b332;
-  animation:pop .4s;
-}
+@media(max-width:480px){
+  #choices{
+    gap:10px;
+  }
 
-.choice.wrong{
-  background:#ffe1e1;
-  border-color:#e74c3c;
-  animation:shake .35s;
-}
-
-.speak-btn{
-  background:#ffb347;
-  color:#fff;
-  box-shadow:0 5px 0 #d98200;
-  font-size:20px;
-}
-
-.question-type{
-  display:inline-block;
-  background:#fff0a8;
-  padding:8px 16px;
-  border-radius:999px;
-  font-weight:bold;
-}
-
-.question{
-  font-size:34px;
-  font-weight:bold;
-  margin:20px 0;
-  line-height:1.5;
-}
-
-.sub-question{
-  font-size:20px;
-  color:#555;
-}
-
-.result-box{
-  margin-top:16px;
-  padding:16px;
-  border-radius:20px;
-  background:#f5fbff;
-  border:3px dashed #8cc8ff;
-  display:none;
-}
-
-.result-box.show{
-  display:block;
-  animation:pop .35s;
-}
-
-.result{
-  font-size:28px;
-  font-weight:bold;
-}
-
-.answer-show{
-  font-size:24px;
-  font-weight:bold;
-  line-height:1.6;
-  margin-top:8px;
-}
-
-.score{
-  margin-top:14px;
-  font-size:18px;
-}
-
-.back-btn{
-  background:#888;
-  box-shadow:0 5px 0 #555;
-}
-
-.finish-title{
-  font-size:32px;
-  font-weight:bold;
-  color:#1976d2;
-}
-
-.wrong-list{
-  text-align:left;
-  margin-top:18px;
-  background:#fff8e1;
-  border-radius:18px;
-  padding:16px;
-}
-
-.wrong-list li{
-  margin:8px 0;
-  font-size:18px;
-}
-
-.practice-message{
-  font-size:20px;
-  font-weight:bold;
-  color:#d35400;
-  line-height:1.6;
-}
-
-.confetti{
-  position:fixed;
-  width:12px;
-  height:12px;
-  top:-20px;
-  z-index:9999;
-  animation:fall 1.5s linear forwards;
-}
-
-@keyframes pop{
-  0%{transform:scale(.75);}
-  100%{transform:scale(1);}
-}
-
-@keyframes shake{
-  0%{transform:translateX(0);}
-  25%{transform:translateX(-8px);}
-  50%{transform:translateX(8px);}
-  75%{transform:translateX(-5px);}
-  100%{transform:translateX(0);}
-}
-
-@keyframes bounce{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-8px);}
-}
-
-@keyframes fall{
-  100%{
-    transform:translateY(110vh) rotate(720deg);
-    opacity:0;
+  .choice{
+    font-size:18px;
+    min-height:70px;
+    padding:10px;
   }
 }
+
+.menu button,
+.main-btn{background:#4aa3ff;color:#fff;box-shadow:0 5px 0 #226fc0;}
+
+.choice.correct{background:#d8ffd8;border-color:#32b332;animation:pop .4s;}
+.choice.wrong{background:#ffe1e1;border-color:#e74c3c;animation:shake .35s;}
+
+.speak-btn{background:#ffb347;color:#fff;box-shadow:0 5px 0 #d98200;font-size:20px;}
+.question-type{display:inline-block;background:#fff0a8;padding:8px 16px;border-radius:999px;font-weight:bold;}
+.question{font-size:34px;font-weight:bold;margin:20px 0;line-height:1.5;}
+.sub-question{font-size:20px;color:#555;}
+.result-box{margin-top:16px;padding:16px;border-radius:20px;background:#f5fbff;border:3px dashed #8cc8ff;display:none;}
+.result-box.show{display:block;animation:pop .35s;}
+.result{font-size:28px;font-weight:bold;}
+.answer-show{font-size:24px;font-weight:bold;line-height:1.6;margin-top:8px;}
+.score{margin-top:14px;font-size:18px;}
+.back-btn{background:#888;box-shadow:0 5px 0 #555;}
+.finish-title{font-size:32px;font-weight:bold;color:#1976d2;}
+.wrong-list{text-align:left;margin-top:18px;background:#fff8e1;border-radius:18px;padding:16px;}
+.wrong-list li{margin:8px 0;font-size:18px;}
+.practice-message{font-size:20px;font-weight:bold;color:#d35400;line-height:1.6;}
+.confetti{position:fixed;width:12px;height:12px;top:-20px;z-index:9999;animation:fall 1.5s linear forwards;}
+
+@keyframes pop{0%{transform:scale(.75);}100%{transform:scale(1);}}
+@keyframes shake{0%{transform:translateX(0);}25%{transform:translateX(-8px);}50%{transform:translateX(8px);}75%{transform:translateX(-5px);}100%{transform:translateX(0);}}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+@keyframes fall{100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
 </style>
 </head>
 
@@ -224,11 +98,7 @@ h1{
   <img src="rogo.png" alt="まなびやつばめ" class="top-logo">
 </a>
 
-<h1>
-まなびやつばめ<br>
-English Lesson
-</h1>
-
+<h1>まなびやつばめ<br>English Lesson</h1>
 <p>英単語を楽しくれんしゅうしよう！</p>
 
 <div id="loading" class="card">
@@ -238,7 +108,6 @@ English Lesson
 
 <div id="startScreen" class="card hidden">
   <div class="mascot">🕊️</div>
-
   <div class="menu">
     <button onclick="startQuiz('jp')">単語の和英クイズ</button>
     <button onclick="startQuiz('en')">英語の英訳クイズ</button>
@@ -253,9 +122,7 @@ English Lesson
   <div id="countText" class="score"></div>
   <div id="questionText" class="question"></div>
 
-  <button class="speak-btn" onclick="speakCurrentWord()">
-    🔊 発音を聞く
-  </button>
+  <button class="speak-btn" onclick="speakCurrentWord()">🔊 発音を聞く</button>
 
   <div id="subQuestion" class="sub-question"></div>
   <div id="choices"></div>
@@ -268,9 +135,7 @@ English Lesson
 
   <div id="score" class="score"></div>
 
-  <button class="main-btn back-btn" onclick="backToStart()">
-    スタート画面へ
-  </button>
+  <button class="main-btn back-btn" onclick="backToStart()">スタート画面へ</button>
 </div>
 
 <div id="finishScreen" class="card hidden">
@@ -279,9 +144,7 @@ English Lesson
   <div id="finalScore" class="result"></div>
   <div id="wrongArea"></div>
 
-  <button class="main-btn back-btn" onclick="backToStart()">
-    スタート画面へ
-  </button>
+  <button class="main-btn back-btn" onclick="backToStart()">スタート画面へ</button>
 </div>
 
 </div>
@@ -297,6 +160,7 @@ let currentQuestion = null;
 let currentAnswer = "";
 let audioContext = null;
 let isAnswered = false;
+let englishVoice = null;
 
 async function loadCSV(){
   try{
@@ -369,6 +233,7 @@ function splitCSVLine(line){
 
 function startQuiz(mode){
   initAudio();
+  prepareEnglishVoice();
   playStartSound();
 
   currentMode = mode;
@@ -393,7 +258,6 @@ function getUsableWords(mode){
       return clean.length >= 4;
     });
   }
-
   return wordData;
 }
 
@@ -426,17 +290,12 @@ function showQuestion(){
   }
 
   if(currentMode.startsWith("blank")){
-    const blankData = makeBlankQuestion(
-      currentQuestion.english,
-      currentMode
-    );
+    const blankData = makeBlankQuestion(currentQuestion.english,currentMode);
 
     document.getElementById("questionType").textContent =
-      currentMode === "blank1"
-      ? "あなうめクイズ　レベル1"
-      : currentMode === "blank2"
-      ? "あなうめクイズ　レベル2"
-      : "あなうめクイズ　レベル3";
+      currentMode === "blank1" ? "あなうめクイズ　レベル1" :
+      currentMode === "blank2" ? "あなうめクイズ　レベル2" :
+      "あなうめクイズ　レベル3";
 
     document.getElementById("questionText").textContent = blankData.blankWord;
     document.getElementById("subQuestion").textContent =
@@ -453,10 +312,7 @@ function makeChoices(answer,field){
   const choices = [answer];
 
   while(choices.length < 4){
-    const random =
-      wordData[
-        Math.floor(Math.random()*wordData.length)
-      ][field];
+    const random = wordData[Math.floor(Math.random()*wordData.length)][field];
 
     if(random && random !== answer && !choices.includes(random)){
       choices.push(random);
@@ -518,20 +374,12 @@ function makeBlankQuestion(word,mode){
   let hideIndexes = [];
 
   if(mode === "blank1"){
-    hideIndexes = [
-      inner[Math.floor(Math.random()*inner.length)]
-    ];
+    hideIndexes = [inner[Math.floor(Math.random()*inner.length)]];
   }
 
   if(mode === "blank2"){
-    const count = Math.min(
-      inner.length,
-      Math.random() < 0.5 ? 2 : 3
-    );
-
-    hideIndexes = shuffle([...inner])
-      .slice(0,count)
-      .sort((a,b)=>a-b);
+    const count = Math.min(inner.length, Math.random() < 0.5 ? 2 : 3);
+    hideIndexes = shuffle([...inner]).slice(0,count).sort((a,b)=>a-b);
   }
 
   if(mode === "blank3"){
@@ -658,7 +506,6 @@ function finishQuiz(){
   <p class="practice-message">
   間違った単語は英語と日本語を３回ずつ書いて練習しましょう！
   </p>
-
   <div class="wrong-list">
   <strong>間違った単語一覧</strong>
   <ol>
@@ -691,24 +538,13 @@ function shuffle(array){
 }
 
 function randomGoodMessage(){
-  const messages = [
-    "Great!",
-    "Excellent!",
-    "Perfect!",
-    "Good job!",
-    "やったね！",
-    "すばらしい！"
-  ];
-
+  const messages = ["Great!","Excellent!","Perfect!","Good job!","やったね！","すばらしい！"];
   return messages[Math.floor(Math.random()*messages.length)];
 }
 
 function initAudio(){
   if(!audioContext){
-    audioContext = new (
-      window.AudioContext ||
-      window.webkitAudioContext
-    )();
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
   }
 
   if(audioContext.state === "suspended"){
@@ -723,7 +559,6 @@ function playCorrectSound(){
   const gain = audioContext.createGain();
 
   osc.type = "triangle";
-
   osc.frequency.setValueAtTime(523,audioContext.currentTime);
   osc.frequency.setValueAtTime(659,audioContext.currentTime + .1);
   osc.frequency.setValueAtTime(784,audioContext.currentTime + .2);
@@ -745,7 +580,6 @@ function playWrongSound(){
   const gain = audioContext.createGain();
 
   osc.type = "sine";
-
   osc.frequency.setValueAtTime(420,audioContext.currentTime);
   osc.frequency.exponentialRampToValueAtTime(320,audioContext.currentTime + .25);
 
@@ -766,7 +600,6 @@ function playStartSound(){
   const gain = audioContext.createGain();
 
   osc.type = "square";
-
   osc.frequency.setValueAtTime(392,audioContext.currentTime);
   osc.frequency.setValueAtTime(523,audioContext.currentTime + .08);
   osc.frequency.setValueAtTime(659,audioContext.currentTime + .16);
@@ -782,13 +615,7 @@ function playStartSound(){
 }
 
 function createConfetti(){
-  const colors = [
-    "#ff6b6b",
-    "#4aa3ff",
-    "#ffd93d",
-    "#6bff95",
-    "#c77dff"
-  ];
+  const colors = ["#ff6b6b","#4aa3ff","#ffd93d","#6bff95","#c77dff"];
 
   for(let i=0;i<20;i++){
     const confetti = document.createElement("div");
@@ -806,6 +633,23 @@ function createConfetti(){
   }
 }
 
+function prepareEnglishVoice(){
+  if(!("speechSynthesis" in window)) return;
+
+  const voices = speechSynthesis.getVoices();
+
+  englishVoice =
+    voices.find(v => v.lang === "en-US" && /Google US English|Samantha|Alex|Microsoft Aria|Microsoft Jenny/i.test(v.name)) ||
+    voices.find(v => v.lang === "en-US") ||
+    voices.find(v => v.lang.startsWith("en-")) ||
+    null;
+}
+
+if("speechSynthesis" in window){
+  speechSynthesis.onvoiceschanged = prepareEnglishVoice;
+  prepareEnglishVoice();
+}
+
 function speakCurrentWord(){
   if(!currentQuestion || !currentQuestion.english) return;
   speakWord(currentQuestion.english);
@@ -818,12 +662,15 @@ function speakWord(word){
   }
 
   speechSynthesis.cancel();
+  prepareEnglishVoice();
 
   const utterance = new SpeechSynthesisUtterance(word);
 
-  utterance.lang = "en-US";
-  utterance.rate = 0.8;
+  utterance.lang = englishVoice ? englishVoice.lang : "en-US";
+  utterance.voice = englishVoice;
+  utterance.rate = 0.92;
   utterance.pitch = 1.0;
+  utterance.volume = 1.0;
 
   speechSynthesis.speak(utterance);
 }
