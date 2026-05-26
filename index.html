@@ -50,15 +50,8 @@ h1{color:#1976d2;line-height:1.4;}
 }
 
 @media(max-width:480px){
-  #choices{
-    gap:10px;
-  }
-
-  .choice{
-    font-size:18px;
-    min-height:70px;
-    padding:10px;
-  }
+  #choices{gap:10px;}
+  .choice{font-size:18px;min-height:70px;padding:10px;}
 }
 
 .menu button,
@@ -160,7 +153,7 @@ let currentQuestion = null;
 let currentAnswer = "";
 let audioContext = null;
 let isAnswered = false;
-let englishVoice = null;
+let pronunciationAudio = null;
 
 async function loadCSV(){
   try{
@@ -233,7 +226,6 @@ function splitCSVLine(line){
 
 function startQuiz(mode){
   initAudio();
-  prepareEnglishVoice();
   playStartSound();
 
   currentMode = mode;
@@ -526,7 +518,7 @@ function updateScore(){
 }
 
 function backToStart(){
-  speechSynthesis.cancel();
+  stopPronunciation();
 
   document.getElementById("quizScreen").classList.add("hidden");
   document.getElementById("finishScreen").classList.add("hidden");
@@ -633,46 +625,33 @@ function createConfetti(){
   }
 }
 
-function prepareEnglishVoice(){
-  if(!("speechSynthesis" in window)) return;
-
-  const voices = speechSynthesis.getVoices();
-
-  englishVoice =
-    voices.find(v => v.lang === "en-US" && /Google US English|Samantha|Alex|Microsoft Aria|Microsoft Jenny/i.test(v.name)) ||
-    voices.find(v => v.lang === "en-US") ||
-    voices.find(v => v.lang.startsWith("en-")) ||
-    null;
-}
-
-if("speechSynthesis" in window){
-  speechSynthesis.onvoiceschanged = prepareEnglishVoice;
-  prepareEnglishVoice();
-}
-
 function speakCurrentWord(){
   if(!currentQuestion || !currentQuestion.english) return;
   speakWord(currentQuestion.english);
 }
 
-function speakWord(word){
-  if(!("speechSynthesis" in window)){
-    alert("このブラウザでは発音機能が使えません。");
-    return;
+function stopPronunciation(){
+  if(pronunciationAudio){
+    pronunciationAudio.pause();
+    pronunciationAudio.currentTime = 0;
+    pronunciationAudio = null;
   }
+}
 
-  speechSynthesis.cancel();
-  prepareEnglishVoice();
+function speakWord(word){
+  stopPronunciation();
 
-  const utterance = new SpeechSynthesisUtterance(word);
+  const cleanWord = String(word).trim();
 
-  utterance.lang = englishVoice ? englishVoice.lang : "en-US";
-  utterance.voice = englishVoice;
-  utterance.rate = 0.92;
-  utterance.pitch = 1.0;
-  utterance.volume = 1.0;
+  const url =
+    "https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q="
+    + encodeURIComponent(cleanWord);
 
-  speechSynthesis.speak(utterance);
+  pronunciationAudio = new Audio(url);
+
+  pronunciationAudio.play().catch(() => {
+    alert("発音音声を再生できませんでした。インターネット接続をご確認ください。");
+  });
 }
 
 loadCSV();
